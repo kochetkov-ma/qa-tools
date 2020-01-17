@@ -1,6 +1,7 @@
 /.gradle
 /.idea
-gradle
+/gradle
+/build
 
 # Gradle
 gradlew
