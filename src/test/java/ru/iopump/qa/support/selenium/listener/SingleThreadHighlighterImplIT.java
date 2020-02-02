@@ -3,8 +3,8 @@ package ru.iopump.qa.support.selenium.listener;
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import ru.iopump.qa.support.http.LocalSimpleHtmlServer;
 import ru.iopump.qa.support.http.LocalSimpleHtmlServer.TestHtmlServer;
@@ -30,7 +30,9 @@ public class SingleThreadHighlighterImplIT {
 
     @Test
     public void openPageAndDemonstrateHighlighting() {
-        final WebDriver driver = chrome.getWebDriver();
+        final EventFiringWebDriver driver = new EventFiringWebDriver(chrome.getWebDriver());
+        driver.register(HighlighterListener.newSingleThreadHighlighterListener());
+
         final String url = "http://" + DOCKER_HOST_MACHINE_HOSTNAME + ":" + server.getPort() + server.getPath();
         driver.get(url);
         final String pageHtml = driver.getPageSource();
