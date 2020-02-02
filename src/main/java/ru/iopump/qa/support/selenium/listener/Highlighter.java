@@ -1,8 +1,10 @@
 package ru.iopump.qa.support.selenium.listener;
 
+import lombok.NonNull;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import javax.annotation.Nullable;
 import java.io.Closeable;
 
 /**
@@ -10,12 +12,12 @@ import java.io.Closeable;
  */
 public interface Highlighter extends Closeable {
     /**
-     * Highlight element in driver and save this element for {@link #unhighlight}.
+     * Highlight element in driver and save this element for {@link #unhighlightPrev}.
      *  @param element WebDriver to Highlight.
      * @param driver  WebDriver with JS.
      * @return
      */
-    boolean highlight(WebElement element, WebDriver driver);
+    boolean highlight(@Nullable WebElement element, @NonNull WebDriver driver);
 
     /**
      * Turn off highlighting for last saved element during {@link #highlight} or do nothing if no active element.
@@ -23,7 +25,7 @@ public interface Highlighter extends Closeable {
      * @param driver         WebDriver with JS.
      * @return
      */
-    boolean unhighlight(WebElement currentElement, WebDriver driver);
+    boolean unhighlightPrev(@Nullable WebElement currentElement, @NonNull WebDriver driver);
 
     /**
      * Remove last Highlighted element and other cache.

@@ -2,9 +2,9 @@ package ru.iopump.qa.support.selenium.listener;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.FieldSetter;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,12 +17,12 @@ public class SingleThreadHighlighterImplTest {
     private SingleThreadHighlighterImpl hHighlighter;
     private WebDriver driver;
     private WebElement element1;
-    private WebElement element2;
     private WebDriver badDriver;
+    private WebElement element2;
 
     @Before
     public void setUp() {
-        hHighlighter = Mockito.spy(new SingleThreadHighlighterImpl());
+        hHighlighter = new SingleThreadHighlighterImpl();
         /* mocking */
         badDriver = Mockito.mock(WebDriver.class);
         driver = Mockito.mock(WebDriverJs.class);
@@ -36,34 +36,21 @@ public class SingleThreadHighlighterImplTest {
     }
 
     @Test
-    @Ignore
-    public void testException() {
+    public void testException() throws NoSuchFieldException {
+        final String prevElementField = "prevElement";
         assertThatThrownBy(() -> hHighlighter.highlight(element1, badDriver))
                 .isInstanceOf(UnsupportedOperationException.class);
-
-        assertThatThrownBy(() -> hHighlighter.unhighlight(element1, badDriver))
+        FieldSetter.setField(hHighlighter, hHighlighter.getClass().getDeclaredField(prevElementField), element1);
+        assertThatThrownBy(() -> hHighlighter.unhighlightPrev(element2, badDriver))
                 .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
-    @Ignore
     public void testHighlight() {
         assertThat(hHighlighter).extracting("borderStyle").isEqualTo("3 px solid red");
         assertThat(hHighlighter).extracting("prevElement").isNull();
-
         hHighlighter.highlight(element1, driver);
-
         assertThat(hHighlighter).extracting("prevElement").isEqualTo(element1);
-    }
-
-    @Test
-    @Ignore
-    public void testUnhighlight() {
-    }
-
-    @Test
-    @Ignore
-    public void testDropState() {
     }
 
     private interface WebDriverJs extends WebDriver, JavascriptExecutor {

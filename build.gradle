@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
+    id "io.freefair.lombok" version "4.1.6"
 }
 group 'ru.iopump.qa'
 version '1.0-SNAPSHOT'
@@ -12,15 +13,25 @@ repositories {
     mavenCentral()
 }
 ext {
+    junit4 = '4.13'
     selenium = '3.+'
     mockito = '3.+'
     assertj = '3.+'
+    lombok = '1.18.+'
+    containers = '1.12.+'
+    slf4j = '1.7.+'
+    logback = '1.2.+'
 }
 dependencies {
     implementation "org.seleniumhq.selenium:selenium-api:$selenium"
     implementation "org.seleniumhq.selenium:selenium-support:$selenium"
+    implementation "org.slf4j:slf4j-api:$slf4j"
+    implementation ("junit:junit:$junit4")  { transitive = false }
 
-    testImplementation 'junit:junit:4.12'
+    // testImplementation "junit:junit:$junit4"
     testImplementation "org.mockito:mockito-core:$mockito"
     testImplementation "org.assertj:assertj-core:$assertj"
+    testImplementation "org.testcontainers:selenium:$containers"
+    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$selenium"
+    testImplementation "org.slf4j:slf4j-simple:$slf4j"
 }

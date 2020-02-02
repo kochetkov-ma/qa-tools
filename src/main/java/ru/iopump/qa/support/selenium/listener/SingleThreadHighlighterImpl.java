@@ -3,6 +3,7 @@ package ru.iopump.qa.support.selenium.listener;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Objects;
 
@@ -45,9 +46,9 @@ public class SingleThreadHighlighterImpl implements Highlighter {
         return false;
     }
 
-    public boolean unhighlight(WebElement currentElement, WebDriver driver) {
+    public boolean unhighlightPrev(WebElement elementWillBeHighlighted, WebDriver driver) {
         /* Do only for new elements */
-        if (prevElement != null && currentElement != prevElement && driver != null) {
+        if (prevElement != null && elementWillBeHighlighted != prevElement && driver != null) {
 
             /* Get previous element border style */
             final String lastBorderStyle = exec(PROP, prevElement, driver).toLowerCase();
