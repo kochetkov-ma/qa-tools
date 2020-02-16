@@ -68,6 +68,8 @@ uploadArchives {
             }
             pom.project {
                 name 'QA simple libs'
+                description 'Different simple tools for auto testing'
+                url 'https://github.com/kochetkov-ma/qa-tools'
                 packaging 'jar'
                 scm {
                     connection 'https://github.com/kochetkov-ma/qa-tools.git'
