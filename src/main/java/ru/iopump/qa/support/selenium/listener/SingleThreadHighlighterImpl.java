@@ -21,7 +21,7 @@ public class SingleThreadHighlighterImpl implements Highlighter {
     public SingleThreadHighlighterImpl(int px, String color) {
         Objects.requireNonNull(color, "Color cannot be null");
 
-        borderStyle = px + " px solid " + color.toLowerCase();
+        borderStyle = px + "px solid " + color.toLowerCase();
     }
 
     public SingleThreadHighlighterImpl() {

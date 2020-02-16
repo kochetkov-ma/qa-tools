@@ -12,7 +12,7 @@ import static java.lang.String.format;
  * Internal.
  */
 final class HUtil {
-    static final String PROP = "arguments[0].style.border=";
+    static final String PROP = "arguments[0].style.border";
     private HUtil() { throw new AssertionError("Utility class"); }
     static String exec(String script, WebElement element, WebDriver driver) {
         if (!(driver instanceof JavascriptExecutor)) {
@@ -28,5 +28,5 @@ final class HUtil {
             return "";
         }
     }
-    static String jsBorder(String borderStyle) { return PROP + "'" + borderStyle + "'"; }
+    static String jsBorder(String borderStyle) { return PROP + "='" + borderStyle + "'"; }
 }

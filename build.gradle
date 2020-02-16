@@ -2,9 +2,13 @@ plugins {
     id 'java'
     id 'idea'
     id "io.freefair.lombok" version "4.1.6"
+    id 'signing'
+    id 'maven'
+    id 'io.codearte.nexus-staging' version '0.21.2'
 }
 group 'ru.iopump.qa'
-version '1.0-SNAPSHOT'
+archivesBaseName = "qa-tools"
+version '0.1.0'
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
     gradleVersion = '6.1'
@@ -27,11 +31,68 @@ dependencies {
     implementation "org.seleniumhq.selenium:selenium-support:$selenium"
     implementation "org.slf4j:slf4j-api:$slf4j"
     implementation ("junit:junit:$junit4")  { transitive = false }
-
-    // testImplementation "junit:junit:$junit4"
+    /* Testing */
     testImplementation "org.mockito:mockito-core:$mockito"
     testImplementation "org.assertj:assertj-core:$assertj"
     testImplementation "org.testcontainers:selenium:$containers"
     testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$selenium"
     testImplementation "org.slf4j:slf4j-simple:$slf4j"
+}
+//////// PUBLISHING ////////
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            pom.project {
+                name 'QA simple libs'
+                packaging 'jar'
+                scm {
+                    connection 'https://github.com/kochetkov-ma/qa-tools.git'
+                    developerConnection 'https://github.com/kochetkov-ma/qa-tools.git'
+                    url 'https://github.com/kochetkov-ma/qa-tools'
+                }
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'kochetkov-ma'
+                        name 'Maxim Kochetkov'
+                        email 'kochetkov-ma@yandex.ru'
+                    }
+                }
+            }
+        }
+    }
+}
+
+nexusStaging {
+    packageGroup = "ru.iopump"
 }

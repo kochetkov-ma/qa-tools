@@ -47,7 +47,7 @@ public class SingleThreadHighlighterImplTest {
 
     @Test
     public void testHighlight() {
-        assertThat(hHighlighter).extracting("borderStyle").isEqualTo("3 px solid red");
+        assertThat(hHighlighter).extracting("borderStyle").isEqualTo("3px solid red");
         assertThat(hHighlighter).extracting("prevElement").isNull();
         hHighlighter.highlight(element1, driver);
         assertThat(hHighlighter).extracting("prevElement").isEqualTo(element1);

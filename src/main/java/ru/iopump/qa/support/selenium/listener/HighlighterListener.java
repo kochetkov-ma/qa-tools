@@ -55,4 +55,16 @@ public class HighlighterListener extends AbstractWebDriverEventListener {
     public void beforeNavigateRefresh(WebDriver driver) {
         highlighter.dropState();
     }
+
+    @Override
+    public void beforeClickOn(WebElement element, WebDriver driver) {
+        highlighter.unhighlightPrev(element, driver);
+        highlighter.highlight(element, driver);
+    }
+
+    @Override
+    public void beforeGetText(WebElement element, WebDriver driver) {
+        highlighter.unhighlightPrev(element, driver);
+        highlighter.highlight(element, driver);
+    }
 }
