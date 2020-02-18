@@ -24,8 +24,17 @@ ext {
     containers = '1.12.5'
     slf4j = '1.7.30'
     logback = '1.2.3'
+    commonsLang = '3.9'
+    classgraph = '4.8.+'
+    joor = '0.9.+'
 }
 dependencies {
+    // Reflection lib
+    implementation "org.jooq:joor:$joor"
+    // Classpath scanner
+    implementation "io.github.classgraph:classgraph:$classgraph"
+    // Apache commons
+    implementation "org.apache.commons:commons-lang3:$commonsLang"
     implementation "org.seleniumhq.selenium:selenium-api:$selenium"
     implementation "org.seleniumhq.selenium:selenium-support:$selenium"
     implementation "org.slf4j:slf4j-api:$slf4j"
