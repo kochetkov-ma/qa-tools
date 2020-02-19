@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
@@ -17,7 +18,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.iopump.qa.util.Str.*;
 
-@Slf4j
 public class StrTest {
 
     @Test
@@ -90,12 +90,10 @@ public class StrTest {
         final UUID uuid = UUID.randomUUID();
         final List list = Lists.newArrayList("VALUE" , new Object(), 1000, null, uuid);
         String result = Str.toPrettyString(list);
-        log.info("RESULT: {}\n", result);
-        assertThat(result).contains("VALUE", "Object()", "1000", "null", Str.toStr(uuid));
+        assertThat(result).contains("VALUE", "Object", "1000", "null", Str.toStr(uuid));
 
         result = Str.toPrettyString(list.toArray());
-        log.info("RESULT: {}\n", result);
-        assertThat(result).contains("VALUE", "Object()", "1000", "null", Str.toStr(uuid));
+        assertThat(result).contains("VALUE", "Object", "1000", "null", Str.toStr(uuid));
     }
 
     @Test
@@ -109,7 +107,6 @@ public class StrTest {
         map.put(null, null);
         map.put("KEY_LONG", "VALUE_LONG_VALUE_LONG_VALUE_LONG_VALUE_LONG");
         final String result = Str.toPrettyString(map);
-        log.info("RESULT: {}\n", result);
         assertThat(result).contains("null : null",
                 "KEY : VALUE",
                 uuid + " : java.lang.Object",

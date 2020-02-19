@@ -1,5 +1,8 @@
 plugins {
     id 'java'
+    id "com.github.spotbugs" version "3.0.0"
+    id 'info.solidsoft.pitest' version '1.4.6'
+    id 'jacoco'
     id 'idea'
     id "io.freefair.lombok" version "4.1.6"
     id 'signing'
@@ -9,6 +12,12 @@ plugins {
 group 'ru.iopump.qa'
 archivesBaseName = "qa-tools"
 version '0.1.0'
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = false
+    }
+}
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
     gradleVersion = '6.1'

@@ -14,7 +14,7 @@ import static ru.iopump.qa.util.Str.toStr;
 public class EnumUtil {
 
     /**
-     * Find enum implemented interface {@link WithValue<V>} by value.
+     * Find enum implemented interface {@link WithValue} by value.
      * This method walk through all enum constants, get value, compare this value with expected value.
      * And return suitable enum constant or {@link IllegalArgumentException}.
      * Ignore case if expected type is {@link String}.

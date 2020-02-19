@@ -23,7 +23,7 @@ public class ResourceUtil {
     @NonNull
     public InputStream getResourceAsStream(@NonNull String relativeOrAbsoluteOrClasspath) {
         final Path file;
-        final InputStream resultStream;
+        InputStream resultStream;
         if (FileUtil.isAbsolute(relativeOrAbsoluteOrClasspath)) {
             file = Paths.get(relativeOrAbsoluteOrClasspath);
         } else if (FileUtil.isUserDirRelative(relativeOrAbsoluteOrClasspath)) {
@@ -44,6 +44,9 @@ public class ResourceUtil {
                 resultStream = cl.getResourceAsStream(relativeOrAbsoluteOrClasspath);
             } else {
                 resultStream = ClassLoader.getSystemResourceAsStream(relativeOrAbsoluteOrClasspath);
+            }
+            if (resultStream == null) {
+                resultStream = ResourceUtil.class.getResourceAsStream(relativeOrAbsoluteOrClasspath);
             }
         }
 

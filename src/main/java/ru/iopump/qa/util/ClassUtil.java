@@ -5,13 +5,24 @@ import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 @UtilityClass
 public class ClassUtil {
 
-    public <CLASS> CLASS cast(@Nullable Object object, @NonNull Class<CLASS> expectedClass, @Nullable String message) {
-        if (object == null) return null;
-        if (expectedClass.isInstance(object)) return expectedClass.cast(object);
+    /**
+     * Null-safe class cast.
+     *
+     * @param object        Object to cast. May be null.
+     * @param expectedClass Target class.
+     * @param message       Message when exception
+     * @param <CLASS>       Target type.
+     * @return object with expected type.
+     * @throws ClassCastException If cast is impossible.
+     */
+    public static <CLASS> Optional<CLASS> cast(@Nullable Object object, @NonNull Class<CLASS> expectedClass, @Nullable String message) {
+        if (object == null) return Optional.empty();
+        if (expectedClass.isInstance(object)) return Optional.of(expectedClass.cast(object));
         else {
             throw new ClassCastException(
                     Str.format("Cannot cast class '{}' with value '{}' to class '{}'.\nMessage: '{}'",
@@ -22,15 +33,8 @@ public class ClassUtil {
         }
     }
 
-    public boolean instanceOf(@Nullable Class<?> childType, @NonNull Class<?> baseType) {
-        if (baseType == Object.class || childType == null) {
-            return true;
-        }
-        return baseType.isAssignableFrom(childType);
-    }
-
     /**
-     * Get class or {@link Class<Object>} if null.
+     * Get class or {@link Object#getClass()} if null.
      */
     @NonNull
     public static Class<?> getClass(@Nullable Object value) {
