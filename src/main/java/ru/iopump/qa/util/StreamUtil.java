@@ -13,24 +13,24 @@ public class StreamUtil {
 
     @SafeVarargs
     @NonNull
-    public <T> Stream<T> stream(@Nullable T... array) {
+    public static <T> Stream<T> stream(@Nullable T... array) {
         if (array == null) return Stream.empty();
         return stream(Arrays.asList(array));
     }
 
     @NonNull
-    public <T> Stream<T> stream(@Nullable Iterable<T> iterable) {
+    public static <T> Stream<T> stream(@Nullable Iterable<T> iterable) {
         return StreamSupport.stream(Optional.ofNullable(iterable)
                 .map(Iterable::spliterator).orElse(Spliterators.emptySpliterator()), false);
     }
 
     @NonNull
-    public <K, V> Stream<Map.Entry<K, V>> stream(@Nullable Map<K, V> map) {
+    public static <K, V> Stream<Map.Entry<K, V>> stream(@Nullable Map<K, V> map) {
         return stream(Optional.ofNullable(map).map(Map::entrySet).get());
     }
 
     @NonNull
-    public <V> Stream<V> noNull(@Nullable Stream<V> stream) {
+    public static <V> Stream<V> noNull(@Nullable Stream<V> stream) {
         if (stream == null) {
             return Stream.empty();
         }
