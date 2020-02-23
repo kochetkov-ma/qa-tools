@@ -55,6 +55,9 @@ dependencies {
     testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$selenium"
     testImplementation "org.slf4j:slf4j-simple:$slf4j"
 }
+pitest {
+    verbose = true
+}
 //////// PUBLISHING ////////
 task javadocJar(type: Jar) {
     archiveClassifier.set 'javadoc'

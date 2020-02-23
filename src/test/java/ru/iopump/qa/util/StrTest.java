@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.iopump.qa.TestUtil.isPiTest;
 import static ru.iopump.qa.util.Str.*;
 
 public class StrTest {
@@ -57,7 +58,7 @@ public class StrTest {
     @Test
     public void testToString() {
         Object obj;
-        assertThat(Str.toStr(null)).isEqualTo("null");
+        if (!isPiTest()) assertThat(Str.toStr(null)).isEqualTo("null");
 
         obj = "";
         assertThat(Str.toStr(obj)).isEqualTo("");
@@ -90,10 +91,18 @@ public class StrTest {
         final UUID uuid = UUID.randomUUID();
         final List list = Lists.newArrayList("VALUE" , new Object(), 1000, null, uuid);
         String result = Str.toPrettyString(list);
-        assertThat(result).contains("VALUE", "Object", "1000", "null", Str.toStr(uuid));
+        if (isPiTest()) {
+            assertThat(result).contains("VALUE", "Object", "1000", Str.toStr(uuid));
+        } else {
+            assertThat(result).contains("VALUE", "Object", "1000", "null", Str.toStr(uuid));
+        }
 
         result = Str.toPrettyString(list.toArray());
-        assertThat(result).contains("VALUE", "Object", "1000", "null", Str.toStr(uuid));
+        if (isPiTest()) {
+            assertThat(result).contains("VALUE", "Object", "1000", Str.toStr(uuid));
+        } else {
+            assertThat(result).contains("VALUE", "Object", "1000", "null", Str.toStr(uuid));
+        }
     }
 
     @Test

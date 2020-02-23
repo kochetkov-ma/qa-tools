@@ -1,7 +1,6 @@
 package ru.iopump.qa.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.iopump.qa.TestUtil.isPiTest;
 
 @Slf4j
 public class FileUtilTest {
@@ -29,7 +29,11 @@ public class FileUtilTest {
     @Test
     public void getClassPathMainDir() {
         final Path path = FileUtil.getClassPathMainDir();
-        assertThat(path).endsWith(Paths.get("qa-tools/build/classes/java/test"));
+        if (isPiTest()) {
+            assertThat(path).endsWith(Paths.get("qa-tools"));
+        } else {
+            assertThat(path).endsWith(Paths.get("qa-tools/build/classes/java/test"));
+        }
     }
 
     @Test
