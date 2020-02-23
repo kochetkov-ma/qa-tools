@@ -5,16 +5,20 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 import org.joor.Reflect;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class ReflectionUtil {
     @NonNull
     public Class<?> getCollectionGenericType(@NonNull Field field) {
@@ -24,8 +28,11 @@ public class ReflectionUtil {
     }
 
     @NonNull
-    public <T> Collection<T> createImplementations(@NonNull Class<T> interfaceOrSuperClass, @NonNull String packageName) {
-        try (ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
+    public <T> Collection<T> createImplementations(@NonNull Class<T> interfaceOrSuperClass, @Nullable String packageName) {
+        if (StringUtils.isBlank(packageName)) {
+            return Collections.emptyList();
+        }
+        try (final ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
             final ClassInfoList controlClasses = scanResult.getClassesImplementing(interfaceOrSuperClass.getName());
             final List<Class<T>> controlClassRefs = controlClasses
                     .filter(classInfo -> !classInfo.isAbstract())
@@ -38,8 +45,11 @@ public class ReflectionUtil {
     }
 
     @NonNull
-    public <T> Collection<Class<T>> findImplementations(@NonNull Class<T> interfaceOrSuperClass, @NonNull String packageName) {
-        try (ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
+    public <T> Collection<Class<T>> findImplementations(@NonNull Class<T> interfaceOrSuperClass, @Nullable String packageName) {
+        if (StringUtils.isBlank(packageName)) {
+            return Collections.emptyList();
+        }
+        try (final ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
             final ClassInfoList implControlClasses;
             if (interfaceOrSuperClass.isInterface()) {
                 implControlClasses = scanResult.getClassesImplementing(interfaceOrSuperClass.getName());
@@ -55,8 +65,11 @@ public class ReflectionUtil {
     }
 
     @NonNull
-    public Optional<Class<?>> findOneClassBySimpleNameInJdk(@NonNull String classSimpleName) {
-        try (ScanResult scanResult = new ClassGraph()
+    public Optional<Class<?>> findOneClassBySimpleNameInJdk(@Nullable String classSimpleName) {
+        if (StringUtils.isBlank(classSimpleName)) {
+            return Optional.empty();
+        }
+        try (final ScanResult scanResult = new ClassGraph()
                 .addClassLoader(ClassLoader.getSystemClassLoader())
                 .enableSystemJarsAndModules()
                 .whitelistPackages("java.lang", "java.util")

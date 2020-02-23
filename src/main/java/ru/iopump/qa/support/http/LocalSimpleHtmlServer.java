@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import ru.iopump.qa.exception.QaException;
 
 import javax.annotation.Nullable;
 import java.io.Closeable;
@@ -89,12 +90,13 @@ public class LocalSimpleHtmlServer implements Closeable {
      *
      * @param html Html page as string.
      */
-    public synchronized void publish(@NonNull String html) {
+    @Synchronized
+    public void publish(@NonNull String html) {
         try {
             this.server = HttpServer.create(new InetSocketAddress(port), 0);
             log.info("[SIMPLE HTTP SERVER] Created");
         } catch (IOException e) {
-            throw new RuntimeException("Error during creating JDK http-server " + toString(), e);
+            throw new QaException("Error during creating JDK http-server " + toString(), e);
         }
         if (published) {
             server.removeContext(path);

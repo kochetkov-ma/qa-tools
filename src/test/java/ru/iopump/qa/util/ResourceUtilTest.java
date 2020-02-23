@@ -1,16 +1,13 @@
 package ru.iopump.qa.util;
 
 import lombok.Cleanup;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 import ru.iopump.qa.exception.QaUtilException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -20,8 +17,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ResourceUtilTest {
 
+    @SuppressWarnings("RedundantThrows")
     @Test
-    public void getResourceAsStream() throws IOException, URISyntaxException {
+    public void getResourceAsStream() throws URISyntaxException, IOException {
         // From user dir
         @Cleanup InputStream io0 = ResourceUtil.getResourceAsStream("src/test/resources/resource-3.txt");
         assertThat(io0).hasContent("3");

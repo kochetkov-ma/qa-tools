@@ -8,6 +8,9 @@ import ru.iopump.qa.util.Str;
  * @see Str#format(String, Object...)
  */
 public class QaException extends RuntimeException {
+
+    private static final long serialVersionUID = -7658126557325361545L;
+
     public QaException() {
     }
 

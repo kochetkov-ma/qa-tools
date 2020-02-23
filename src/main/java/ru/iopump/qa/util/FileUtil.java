@@ -20,14 +20,15 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@SuppressWarnings("ALL")
 @UtilityClass
 public class FileUtil {
     /**
      * Enable FilesWatchdog function.
      * Default is false.
      */
-    public static boolean ENABLE_WATCHDOG = false;
-    private static volatile FilesWatchdog filesWatchdog;
+    public static boolean ENABLE_WATCHDOG;
+    private static FilesWatchdog filesWatchdog;
 
     /**
      * Get single {@link FilesWatchdog} for all create operation in this utility class {@link FileUtil}.
@@ -107,6 +108,7 @@ public class FileUtil {
      * @param checkExisting true - check if exists before creating / null or false - don't check
      * @return true - Directory has been created / false - not
      */
+    @SuppressWarnings("UnusedReturnValue")
     @NonNull
     public static boolean createDir(@NonNull Path path, boolean ... checkExisting) {
         try {
@@ -157,10 +159,11 @@ public class FileUtil {
      * Enable it before {@link #ENABLE_WATCHDOG}.
      * Then get it {@link #getFilesWatchdog()}.
      */
+    @SuppressWarnings("unused")
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FilesWatchdog implements Closeable {
-        private Collection<Path> watchedPaths = new ConcurrentLinkedQueue<>();
-        private Map<Path, Throwable> errors = new HashMap<>();
+        private final Collection<Path> watchedPaths = new ConcurrentLinkedQueue<>();
+        private final Map<Path, Throwable> errors = new HashMap<>(); // NOPMD Only one thread will use it
         private boolean closed;
 
         /**
@@ -204,7 +207,7 @@ public class FileUtil {
         private void add(Path path) {
             synchronized (FileUtil.class) {
                 Preconditions.checkState(!closed, "FilesWatchdog already closed");
-                Optional.ofNullable(path).ifPresent(p -> watchedPaths.add(p));
+                Optional.ofNullable(path).ifPresent(watchedPaths::add);
             }
         }
     }

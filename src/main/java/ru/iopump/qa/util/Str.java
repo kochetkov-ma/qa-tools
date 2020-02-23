@@ -14,13 +14,14 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 @UtilityClass
 public class Str {
     public static final Integer MAP_FORMAT_MAX_ALIGN_DEFAULT = 60;
     public static final String NULL_STR_DEFAULT = "null";
 
-    private volatile static String NULL_STR = NULL_STR_DEFAULT;
-    private volatile static int MAP_FORMAT_MAX_ALIGN = MAP_FORMAT_MAX_ALIGN_DEFAULT;
+    private static String NULL_STR = NULL_STR_DEFAULT;
+    private static int MAP_FORMAT_MAX_ALIGN = MAP_FORMAT_MAX_ALIGN_DEFAULT;
 
     public static void setMapFormatMaxAlign(int align) {
         MAP_FORMAT_MAX_ALIGN = align;
@@ -88,10 +89,8 @@ public class Str {
     public static String toPrettyString(@Nullable Map<?, ?> map) {
         if (map == null) return "";
         final Map<String, String> printableMap = map.keySet().stream().collect(Collectors.toMap(Str::toStr, Str::toStr));
-        int maxKeyLength = printableMap.keySet().stream().map(String::length).max(Comparator.naturalOrder())
-                .orElse(10);
-        if (maxKeyLength > MAP_FORMAT_MAX_ALIGN) maxKeyLength = MAP_FORMAT_MAX_ALIGN;
-        final int maxKeyLengthFinal = maxKeyLength;
+        final int maxKeyLengthTmp = printableMap.keySet().stream().map(String::length).max(Comparator.naturalOrder()).orElse(10);
+        final int maxKeyLengthFinal = Math.min(maxKeyLengthTmp, MAP_FORMAT_MAX_ALIGN);
         return "Size: " + map.size() +
                 StreamUtil.stream(map).map(e -> String.format("%" + maxKeyLengthFinal + "s : %s", e.getKey(), e.getValue()))
                         .collect(Collectors.joining(System.lineSeparator(), System.lineSeparator(), ""));
@@ -130,6 +129,7 @@ public class Str {
             this.setContentEnd(")");
         }
 
+        @SuppressWarnings("SameReturnValue")
         private Object readResolve() {
             return INSTANCE;
         }

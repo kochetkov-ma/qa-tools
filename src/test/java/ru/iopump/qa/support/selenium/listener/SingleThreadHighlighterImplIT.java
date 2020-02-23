@@ -22,11 +22,11 @@ public class SingleThreadHighlighterImplIT {
             "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
 
     @Rule
-    public TestHtmlServer server = LocalSimpleHtmlServer.of().asTestRule(HTML);
+    public final TestHtmlServer server = LocalSimpleHtmlServer.of().asTestRule(HTML);
 
     @Rule
     @SuppressWarnings("rawtypes")
-    public BrowserWebDriverContainer chrome =
+    public final BrowserWebDriverContainer chrome =
             new BrowserWebDriverContainer()
                     .withCapabilities(new ChromeOptions())
                     .withRecordingMode(BrowserWebDriverContainer.VncRecordingMode.SKIP, new File("./build/vnc"));

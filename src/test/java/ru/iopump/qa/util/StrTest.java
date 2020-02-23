@@ -3,8 +3,6 @@ package ru.iopump.qa.util;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
@@ -19,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.iopump.qa.TestUtil.isPiTest;
 import static ru.iopump.qa.util.Str.*;
 
+@SuppressWarnings({"RedundantArrayCreation", "rawtypes"})
 public class StrTest {
 
     @Test
@@ -108,7 +107,7 @@ public class StrTest {
     @Test
     public void testToPrettyStringMap() {
         final UUID uuid = UUID.randomUUID();
-        final Map map = Maps.newHashMap();
+        final Map<Object, Object> map = Maps.newHashMap();
         map.put("KEY", "VALUE");
         map.put(uuid, new Object());
         map.put(1, 1000);

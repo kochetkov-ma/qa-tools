@@ -2,6 +2,7 @@ package ru.iopump.qa.support.http;
 
 import okhttp3.*;
 import org.assertj.core.api.Assertions;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings({"EmptyMethod", "ConstantConditions"})
 public class LocalSimpleHtmlServerIT {
 
     private static final String URL = "http://localhost:8080";
@@ -37,13 +39,13 @@ public class LocalSimpleHtmlServerIT {
         client.newCall(request)
                 .enqueue(new Callback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Assertions.fail("localhost simple age must be available. But not.", e);
                         countDownLatch.countDown();
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         Assertions.assertThat(response.body().string())
                                 .contains(HTML);
                         countDownLatch.countDown();

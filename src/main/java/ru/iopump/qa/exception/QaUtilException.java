@@ -7,7 +7,10 @@ import ru.iopump.qa.util.Str;
  *
  * @see Str#format(String, Object...)
  */
+@SuppressWarnings("unused")
 public class QaUtilException extends RuntimeException {
+    private static final long serialVersionUID = -6426093358209017743L;
+
     public QaUtilException() {
     }
 

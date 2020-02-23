@@ -9,6 +9,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 @UtilityClass
 public class ResourceUtil {
@@ -22,38 +25,35 @@ public class ResourceUtil {
      */
     @NonNull
     public InputStream getResourceAsStream(@NonNull String relativeOrAbsoluteOrClasspath) {
-        final Path file;
-        InputStream resultStream;
-        if (FileUtil.isAbsolute(relativeOrAbsoluteOrClasspath)) {
-            file = Paths.get(relativeOrAbsoluteOrClasspath);
-        } else if (FileUtil.isUserDirRelative(relativeOrAbsoluteOrClasspath)) {
-            file = FileUtil.getUserDir().resolve(relativeOrAbsoluteOrClasspath);
-        } else {
-            file = null;
-        }
-        if (file != null && Files.exists(file)) {
-            try {
-                resultStream = Files.newInputStream(file);
-            } catch (IOException e) {
-                throw new QaUtilException("Cannot read resource '" + relativeOrAbsoluteOrClasspath +
-                        "'. It is a file. But cannot be read", e);
-            }
-        } else {
-            final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            if (cl != null) {
-                resultStream = cl.getResourceAsStream(relativeOrAbsoluteOrClasspath);
-            } else {
-                resultStream = ClassLoader.getSystemResourceAsStream(relativeOrAbsoluteOrClasspath);
-            }
-            if (resultStream == null) {
-                resultStream = ResourceUtil.class.getResourceAsStream(relativeOrAbsoluteOrClasspath);
-            }
-        }
+        return ifFileFromFileSystem(relativeOrAbsoluteOrClasspath)
+                .filter(file -> Files.exists(file))
+                .map(file -> {
+                    try {
+                        return Files.newInputStream(file);
+                    } catch (IOException e) {
+                        throw new QaUtilException("Cannot read resource '{}'. It is a file. But cannot be read",
+                                e, relativeOrAbsoluteOrClasspath);
+                    }
+                })
+                .orElseGet(() -> ofNullable(Thread.currentThread().getContextClassLoader())
+                        .map(cl -> cl.getResourceAsStream(relativeOrAbsoluteOrClasspath))
+                        .orElseGet(() -> ofNullable(ClassLoader.getSystemResourceAsStream(relativeOrAbsoluteOrClasspath))
+                                .orElseGet(() -> ofNullable(ResourceUtil.class.getResourceAsStream(relativeOrAbsoluteOrClasspath))
+                                        .orElseThrow(() -> new QaUtilException(
+                                                "Cannot find resource '{}'. It is not absolute path, not relative path, not classpath resource",
+                                                relativeOrAbsoluteOrClasspath
+                                        ))
+                                )
+                        )
+                );
+    }
 
-        if (resultStream == null) {
-            throw new QaUtilException("Cannot find resource '" + relativeOrAbsoluteOrClasspath +
-                    "'. It is not absolute path, not relative path, not classpath resource");
+    private Optional<Path> ifFileFromFileSystem(String relativeOrAbsoluteOrClasspath) {
+        if (FileUtil.isAbsolute(relativeOrAbsoluteOrClasspath)) {
+            return Optional.of(Paths.get(relativeOrAbsoluteOrClasspath));
+        } else if (FileUtil.isUserDirRelative(relativeOrAbsoluteOrClasspath)) {
+            return Optional.of(FileUtil.getUserDir().resolve(relativeOrAbsoluteOrClasspath));
         }
-        return resultStream;
+        return Optional.empty();
     }
 }

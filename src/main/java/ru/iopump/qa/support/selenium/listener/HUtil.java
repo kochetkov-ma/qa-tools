@@ -23,7 +23,7 @@ final class HUtil {
         final JavascriptExecutor executor = (JavascriptExecutor) driver;
         try {
             return Objects.toString(executor.executeScript(script, element), "");
-        } catch (Throwable throwable) {
+        } catch (RuntimeException ignore) { // NOPMD - It's ok
             return "";
         }
     }
