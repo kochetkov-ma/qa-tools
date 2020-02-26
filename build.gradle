@@ -25,6 +25,7 @@ scmVersion {
 version = scmVersion.version
 group = theGroup
 archivesBaseName = theArchivesBaseName
+//region PMD
 pmd {
     rulePriority = 4 // 5 is default
     ruleSetFiles "$rootDir/gradle/pmd-rules.xml"
@@ -33,6 +34,8 @@ pmd {
 pmdTest {
     rulePriority = 1
 }
+//endregion
+//region SpotBug
 spotbugs {
     toolVersion '4.0.0'
     ignoreFailures false
@@ -40,12 +43,19 @@ spotbugs {
     reportLevel 'high'
     excludeFilter file("$rootDir/gradle/spotbugs-exclude.xml")
 }
+spotbugsTest {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
 spotbugsMain {
     reports {
         xml.enabled false
         html.enabled true
     }
 }
+//endregion
 idea {
     module {
         downloadJavadoc = true

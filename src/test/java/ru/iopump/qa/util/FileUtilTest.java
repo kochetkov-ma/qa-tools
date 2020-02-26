@@ -2,7 +2,7 @@ package ru.iopump.qa.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -17,8 +17,8 @@ import static ru.iopump.qa.TestUtil.isPiTest;
 @Slf4j
 public class FileUtilTest {
 
-    @Before
-    public void before() {
+    @BeforeClass
+    public static void before() {
         FileUtil.ENABLE_WATCHDOG = true;
     }
 
