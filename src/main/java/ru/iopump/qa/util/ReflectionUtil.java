@@ -22,8 +22,18 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class ReflectionUtil {
 
+    /**
+     * Get collection of parameters types of passed {@link Field}.
+     * You can get generic types only from {@link Field} (or {@link Class}).
+     * For object this information is been removed.
+     * Null-safe.
+     *
+     * @param field field with parameters type
+     * @return collection of generic types
+     */
     @NonNull
-    public static Collection<Class<?>> getGenericTypes(@NonNull Field field) {
+    public static Collection<Class<?>> getGenericTypes(@Nullable Field field) {
+        if (field == null) return Collections.emptyList();
         final Type genericType = field.getGenericType();
         if (!(genericType instanceof ParameterizedType)) return null;
         return StreamUtil.stream(((ParameterizedType) genericType).getActualTypeArguments())
@@ -31,19 +41,37 @@ public class ReflectionUtil {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Find all implementations of passed type and create it via non-arg constructor.
+     * Null-safe.
+     *
+     * @param interfaceOrSuperClass Base type
+     * @param packageName           full package name to search
+     * @param <T>                   Expected type
+     * @return Collection of children.
+     */
     @NonNull
-    public static <T> Collection<T> createImplementations(@NonNull Class<T> interfaceOrSuperClass, @Nullable String packageName) {
+    public static <T> Collection<T> createImplementations(@Nullable Class<T> interfaceOrSuperClass,
+                                                          @Nullable String packageName) {
         //noinspection unchecked
         return StreamUtil.stream(findImplementations(interfaceOrSuperClass, packageName))
                 .map(aClass -> (T) Reflect.onClass(aClass).create().get())
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Find all implementations of passed type.
+     * Null-safe.
+     *
+     * @param interfaceOrSuperClass Base type
+     * @param packageName           full package name to search
+     * @param <T>                   Expected type
+     * @return Collection of children.
+     */
     @NonNull
-    public static <T> Collection<Class<T>> findImplementations(@NonNull Class<T> interfaceOrSuperClass, @Nullable String packageName) {
-        if (StringUtils.isBlank(packageName)) {
-            return Collections.emptyList();
-        }
+    public static <T> Collection<Class<T>> findImplementations(@Nullable Class<T> interfaceOrSuperClass,
+                                                               @Nullable String packageName) {
+        if (StringUtils.isBlank(packageName) || interfaceOrSuperClass == null) return Collections.emptyList();
         try (final ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
             final ClassInfoList implControlClasses;
             if (interfaceOrSuperClass.isInterface()) {
@@ -59,6 +87,15 @@ public class ReflectionUtil {
         }
     }
 
+    /**
+     * Find class in JDK packages by his simple name.
+     * Search will be only in 'java.lang' and 'java.util' because.
+     * For example 'String' will find {@link String} class.
+     * Null-safe.
+     *
+     * @param classSimpleName Simple class name (not full) in JDK.
+     * @return Related class
+     */
     @NonNull
     public static Optional<Class<?>> findOneClassBySimpleNameInJdk(@Nullable String classSimpleName) {
         if (StringUtils.isBlank(classSimpleName)) {
