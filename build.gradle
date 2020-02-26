@@ -1,14 +1,49 @@
+buildscript {
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.+'
+    }
+}
 plugins {
     id 'java'
+    id 'com.github.spotbugs' version '3.0.0'
+    id 'info.solidsoft.pitest' version '1.4.6'
+    id 'jacoco'
     id 'idea'
-    id "io.freefair.lombok" version "4.1.6"
+    id 'io.freefair.lombok' version '4.1.6'
     id 'signing'
     id 'maven'
+    id 'pmd'
     id 'io.codearte.nexus-staging' version '0.21.2'
 }
-group 'ru.iopump.qa'
-archivesBaseName = "qa-tools"
-version '0.1.0'
+group = theGroup
+archivesBaseName = theArchivesBaseName
+pmd {
+    rulePriority = 4 // 5 is default
+    ruleSetFiles "$rootDir/gradle/pmd-rules.xml"
+    ruleSets = []
+}
+pmdTest {
+    rulePriority = 1
+}
+spotbugs {
+    toolVersion '4.0.0'
+    ignoreFailures false
+    effort 'default'
+    reportLevel 'high'
+    excludeFilter file("$rootDir/gradle/spotbugs-exclude.xml")
+}
+spotbugsMain {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = false
+    }
+}
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
     gradleVersion = '6.1'
@@ -24,12 +59,21 @@ ext {
     containers = '1.12.5'
     slf4j = '1.7.30'
     logback = '1.2.3'
+    commonsLang = '3.9'
+    classgraph = '4.8.+'
+    joor = '0.9.+'
 }
 dependencies {
+    /* Reflection lib */
+    implementation "org.jooq:joor:$joor"
+    /* Classpath scanner */
+    implementation "io.github.classgraph:classgraph:$classgraph"
+    /* Apache commons */
+    implementation "org.apache.commons:commons-lang3:$commonsLang"
     implementation "org.seleniumhq.selenium:selenium-api:$selenium"
     implementation "org.seleniumhq.selenium:selenium-support:$selenium"
     implementation "org.slf4j:slf4j-api:$slf4j"
-    implementation ("junit:junit:$junit4")  { transitive = false }
+    implementation("junit:junit:$junit4") { transitive = false }
     /* Testing */
     testImplementation "org.mockito:mockito-core:$mockito"
     testImplementation "org.assertj:assertj-core:$assertj"
@@ -37,10 +81,14 @@ dependencies {
     testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$selenium"
     testImplementation "org.slf4j:slf4j-simple:$slf4j"
 }
-//////// PUBLISHING ////////
+pitest {
+    verbose.set true
+}
+//region Maven Central Publication
 task javadocJar(type: Jar) {
     archiveClassifier.set 'javadoc'
     from javadoc
+    javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 task sourcesJar(type: Jar) {
@@ -58,8 +106,10 @@ signing {
 
 uploadArchives {
     repositories {
+        //noinspection GrUnresolvedAccess
         mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            beforeDeployment { MavenDeployment deployment -> //noinspection GrDeprecatedAPIUsage
+                signing.signPom(deployment) }
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(userName: ossrhUsername, password: ossrhPassword)
             }
@@ -67,7 +117,7 @@ uploadArchives {
                 authentication(userName: ossrhUsername, password: ossrhPassword)
             }
             pom.project {
-                name 'QA simple libs'
+                name = 'QA simple libs'
                 description 'Different simple tools for auto testing'
                 url 'https://github.com/kochetkov-ma/qa-tools'
                 packaging 'jar'
@@ -78,14 +128,14 @@ uploadArchives {
                 }
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
+                        name = 'The Apache License, Version 2.0'
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
                 developers {
                     developer {
                         id 'kochetkov-ma'
-                        name 'Maxim Kochetkov'
+                        name = 'Maxim Kochetkov'
                         email 'kochetkov-ma@yandex.ru'
                     }
                 }
@@ -96,3 +146,4 @@ uploadArchives {
 nexusStaging {
     packageGroup = "ru.iopump"
 }
+//endregion

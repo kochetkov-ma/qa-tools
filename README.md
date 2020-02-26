@@ -30,5 +30,53 @@ or in Junit as test rule
         public LocalSimpleHtmlServer.TestHtmlServer server = LocalSimpleHtmlServer.of(8080, "/")
             .asTestRule("<!DOCTYPE html><html><body>test</body></html>");      
 ``` 
+#### WithValue interface
+If you have some class with any value field especially String type just implement `WithValue` interface.  
+And you will get very convenient method `ru.iopump.qa.support.api.WithValue.hasValue` (see javadoc).  
+This smart small method can equals every types of values especially String type with ignore case, 
+also it execute smart cast objectValue or expectedValue to String if any of them is String type.    
 
-...
+### Utilities
+#### ClassUtil
+Provide several JDK's methods with a null-safe behavior.
+#### EnumUtil
+- create your enum implemented `WithValue<String>`
+```java
+    @AllArgsConstructor
+    @Getter
+    private enum EnumTmp implements WithValue<String> {
+        ONE("one_value"), TWO("two_value"), THREE("three_value");
+        private final String value;
+    }
+```
+- find enum constants by String value and don't worry about letter's case or get clear exception with very useful message
+ ```java
+EnumTmp result = EnumUtil.getByValue(EnumTmp.class, "ONE_VALUE")
+assert result == EnumTmp.ONE
+```
+- you may change generic type to any other and use it
+- also you may find enum by its name
+```java
+EnumTmp result = EnumUtil.getByName(EnumTmp.class, "two")
+assert result == EnumTmp.TWO
+```
+#### FileUtil
+
+#### ReflectionUtil
+
+#### ResourceUtil
+
+#### Str
+
+#### StreamUtil
+
+#### VarUtil
+Merge environment and system variables.  
+```java
+        /* get */
+        Optional<String> envOrSysProp = VarUtil.get("OS");
+        assertThat(envOrSysProp).isNotEmpty();
+        /* getOfDefault */
+        String envOrSysPropOrDefault = VarUtil.getOfDefault("NOT_EXISTS", "DEFAULT_VALUE") // can be null
+        assertThat(VarUtil.getOfDefault("NOT_EXISTS", "DEFAULT_VALUE")).isEqualTo("DEFAULT_VALUE");
+```

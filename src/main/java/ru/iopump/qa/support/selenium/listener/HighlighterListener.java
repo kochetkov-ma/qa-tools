@@ -15,7 +15,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  * with default {@link SingleThreadHighlighterImpl} highlighting strategy.
  */
 @NotThreadSafe
-public class HighlighterListener extends AbstractWebDriverEventListener {
+public final class HighlighterListener extends AbstractWebDriverEventListener {
     private final Highlighter highlighter;
 
     private HighlighterListener(@NonNull Highlighter highlighter) {

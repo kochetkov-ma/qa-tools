@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("ConstantConditions")
 public class SingleThreadHighlighterImplTest {
 
     private SingleThreadHighlighterImpl hHighlighter;

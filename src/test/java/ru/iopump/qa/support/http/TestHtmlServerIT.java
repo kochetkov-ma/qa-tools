@@ -2,6 +2,7 @@ package ru.iopump.qa.support.http;
 
 import okhttp3.*;
 import org.assertj.core.api.Assertions;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -9,9 +10,10 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("ConstantConditions")
 public class TestHtmlServerIT {
     @Rule
-    public LocalSimpleHtmlServer.TestHtmlServer server = LocalSimpleHtmlServer.of().asTestRule();
+    public final LocalSimpleHtmlServer.TestHtmlServer server = LocalSimpleHtmlServer.of().asTestRule();
 
     @Test
     public void publish() throws InterruptedException {
@@ -23,13 +25,13 @@ public class TestHtmlServerIT {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         call.enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Assertions.fail("localhost simple age must be available. But not.", e);
                 countDownLatch.countDown();
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 Assertions.assertThat(response.body().string())
                         .contains(server.getHtml());
                 countDownLatch.countDown();

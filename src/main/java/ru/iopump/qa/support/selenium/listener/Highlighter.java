@@ -13,17 +13,19 @@ import java.io.Closeable;
 public interface Highlighter extends Closeable {
     /**
      * Highlight element in driver and save this element for {@link #unhighlightPrev}.
-     *  @param element WebDriver to Highlight.
+     *
+     * @param element WebDriver to Highlight.
      * @param driver  WebDriver with JS.
-     * @return
+     * @return success action
      */
     boolean highlight(@Nullable WebElement element, @NonNull WebDriver driver);
 
     /**
      * Turn off highlighting for last saved element during {@link #highlight} or do nothing if no active element.
-     *  @param currentElement WebDriver to Turn off highlighting.
+     *
+     * @param currentElement WebDriver to Turn off highlighting.
      * @param driver         WebDriver with JS.
-     * @return
+     * @return success action
      */
     boolean unhighlightPrev(@Nullable WebElement currentElement, @NonNull WebDriver driver);
 

@@ -1,10 +1,11 @@
 package ru.iopump.qa.support.selenium.listener;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.Locale;
 import java.util.Objects;
 
 import static ru.iopump.qa.support.selenium.listener.HUtil.*;
@@ -21,18 +22,19 @@ public class SingleThreadHighlighterImpl implements Highlighter {
     public SingleThreadHighlighterImpl(int px, String color) {
         Objects.requireNonNull(color, "Color cannot be null");
 
-        borderStyle = px + "px solid " + color.toLowerCase();
+        borderStyle = px + "px solid " + color.toLowerCase(Locale.getDefault());
     }
 
     public SingleThreadHighlighterImpl() {
         this(3, "red");
     }
 
+    @Override
     public boolean highlight(WebElement element, WebDriver driver) {
         if (element != null && driver != null) {
 
             /* Get current element border style */
-            final String currentStyle = exec(PROP, element, driver).toLowerCase();
+            final String currentStyle = exec(PROP, element, driver).toLowerCase(Locale.getDefault());
 
             /* Do only if element hasn't already been highlighted */
             if (!currentStyle.contains(borderStyle)) {
@@ -46,12 +48,13 @@ public class SingleThreadHighlighterImpl implements Highlighter {
         return false;
     }
 
+    @Override
     public boolean unhighlightPrev(WebElement elementWillBeHighlighted, WebDriver driver) {
         /* Do only for new elements */
-        if (prevElement != null && elementWillBeHighlighted != prevElement && driver != null) {
+        if (prevElement != null && ObjectUtils.notEqual(elementWillBeHighlighted, prevElement) && driver != null) {
 
             /* Get previous element border style */
-            final String lastBorderStyle = exec(PROP, prevElement, driver).toLowerCase();
+            final String lastBorderStyle = exec(PROP, prevElement, driver).toLowerCase(Locale.getDefault());
 
             /* Do only if element has already been highlighted */
             if (!lastBorderStyle.contains(borderStyle)) {
@@ -66,8 +69,9 @@ public class SingleThreadHighlighterImpl implements Highlighter {
         return false;
     }
 
+    @Override
     public void dropState() {
-        prevElement = null;
+        prevElement = null;// NOPMD - null is OK
     }
 
     @Override
