@@ -92,7 +92,6 @@ dependencies {
 pitest {
     verbose.set true
 }
-
 //region Maven Central Publication
 task javadocJar(type: Jar) {
     archiveClassifier.set 'javadoc'

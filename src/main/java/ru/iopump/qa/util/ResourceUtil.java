@@ -24,7 +24,7 @@ public class ResourceUtil {
      * @param relativeOrAbsoluteOrClasspath Relative path from user/current/active directory. Absolute path. File in classpath. File from resource dir.
      */
     @NonNull
-    public InputStream getResourceAsStream(@NonNull String relativeOrAbsoluteOrClasspath) {
+    public static InputStream getResourceAsStream(@NonNull String relativeOrAbsoluteOrClasspath) {
         return ifFileFromFileSystem(relativeOrAbsoluteOrClasspath)
                 .filter(file -> Files.exists(file))
                 .map(file -> {
@@ -48,7 +48,7 @@ public class ResourceUtil {
                 );
     }
 
-    private Optional<Path> ifFileFromFileSystem(String relativeOrAbsoluteOrClasspath) {
+    private static Optional<Path> ifFileFromFileSystem(String relativeOrAbsoluteOrClasspath) {
         if (FileUtil.isAbsolute(relativeOrAbsoluteOrClasspath)) {
             return Optional.of(Paths.get(relativeOrAbsoluteOrClasspath));
         } else if (FileUtil.isUserDirRelative(relativeOrAbsoluteOrClasspath)) {
