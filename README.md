@@ -71,3 +71,12 @@ assert result == EnumTmp.TWO
 #### StreamUtil
 
 #### VarUtil
+Merge environment and system variables.  
+```java
+        /* get */
+        Optional<String> envOrSysProp = VarUtil.get("OS");
+        assertThat(envOrSysProp).isNotEmpty();
+        /* getOfDefault */
+        String envOrSysPropOrDefault = VarUtil.getOfDefault("NOT_EXISTS", "DEFAULT_VALUE") // can be null
+        assertThat(VarUtil.getOfDefault("NOT_EXISTS", "DEFAULT_VALUE")).isEqualTo("DEFAULT_VALUE");
+```
