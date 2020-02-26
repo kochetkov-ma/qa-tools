@@ -56,6 +56,21 @@ spotbugsMain {
     }
 }
 //endregion
+test {
+    minHeapSize = "256m"
+    maxHeapSize = "2G"
+    jvmArgs '-XX:MaxPermSize=512m'
+    reports {
+        html.enabled = true
+    }
+    testLogging {
+        showCauses true
+        showStackTraces true
+        showExceptions true
+        events "started", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
 idea {
     module {
         downloadJavadoc = true

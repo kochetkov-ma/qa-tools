@@ -21,4 +21,5 @@ jobs:
         release.customPassword: ${{ secrets.GIT_HUB_TOKEN }}
       with:
         gradle-version: current
-        arguments: --scan --stacktrace -PossrhUsername=kochetkov-ma -PossrhPassword=${{ secrets.ossrhPassword }} -Prelease.customUsername=kochetkov-ma -Prelease.customPassword=${{ secrets.GIT_HUB_TOKEN }} clean check build
+        arguments: --scan --info --stacktrace -PossrhUsername=kochetkov-ma -PossrhPassword=${{ secrets.ossrhPassword }} -Prelease.customUsername=kochetkov-ma
+        -Prelease.customPassword=${{ secrets.GIT_HUB_TOKEN }} clean check build
