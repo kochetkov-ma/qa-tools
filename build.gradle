@@ -67,7 +67,7 @@ test {
         showCauses true
         showStackTraces true
         showExceptions true
-        events "started", "skipped", "failed"
+        /* events "started", "skipped", "failed" */
         exceptionFormat "full"
     }
 }
