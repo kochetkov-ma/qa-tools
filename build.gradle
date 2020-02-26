@@ -14,9 +14,18 @@ plugins {
     id 'maven'
     id 'pmd'
     id 'io.codearte.nexus-staging' version '0.21.2'
+    id 'pl.allegro.tech.build.axion-release' version '1.11.0'
 }
+scmVersion {
+    tag {
+        prefix = 'v'
+        versionSeparator = ''
+    }
+}
+version = scmVersion.version
 group = theGroup
 archivesBaseName = theArchivesBaseName
+//region PMD
 pmd {
     rulePriority = 4 // 5 is default
     ruleSetFiles "$rootDir/gradle/pmd-rules.xml"
@@ -25,6 +34,8 @@ pmd {
 pmdTest {
     rulePriority = 1
 }
+//endregion
+//region SpotBug
 spotbugs {
     toolVersion '4.0.0'
     ignoreFailures false
@@ -32,12 +43,19 @@ spotbugs {
     reportLevel 'high'
     excludeFilter file("$rootDir/gradle/spotbugs-exclude.xml")
 }
+spotbugsTest {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
 spotbugsMain {
     reports {
         xml.enabled false
         html.enabled true
     }
 }
+//endregion
 idea {
     module {
         downloadJavadoc = true
@@ -46,7 +64,7 @@ idea {
 }
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = '6.1'
+    gradleVersion = '6.2'
 }
 repositories {
     mavenCentral()
