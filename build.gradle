@@ -14,7 +14,15 @@ plugins {
     id 'maven'
     id 'pmd'
     id 'io.codearte.nexus-staging' version '0.21.2'
+    id 'pl.allegro.tech.build.axion-release' version '1.11.0'
 }
+scmVersion {
+    tag {
+        prefix = 'v'
+        versionSeparator = ''
+    }
+}
+version = scmVersion.version
 group = theGroup
 archivesBaseName = theArchivesBaseName
 pmd {
@@ -46,7 +54,7 @@ idea {
 }
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = '6.1'
+    gradleVersion = '6.2'
 }
 repositories {
     mavenCentral()
@@ -84,6 +92,7 @@ dependencies {
 pitest {
     verbose.set true
 }
+
 //region Maven Central Publication
 task javadocJar(type: Jar) {
     archiveClassifier.set 'javadoc'
