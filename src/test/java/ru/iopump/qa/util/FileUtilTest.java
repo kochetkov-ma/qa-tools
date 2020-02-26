@@ -1,14 +1,15 @@
 package ru.iopump.qa.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.iopump.qa.TestUtil.isPiTest;
@@ -16,13 +17,13 @@ import static ru.iopump.qa.TestUtil.isPiTest;
 @Slf4j
 public class FileUtilTest {
 
-    @BeforeClass
-    public static void before() {
+    @Before
+    public void before() {
         FileUtil.ENABLE_WATCHDOG = true;
     }
 
-    @AfterClass
-    public static void after() {
+    @After
+    public void after() {
         FileUtil.getFilesWatchdog().close();
     }
 
@@ -37,7 +38,7 @@ public class FileUtilTest {
     }
 
     @Test
-    public void createFileIfNotExists() throws IOException {
+    public void createFile() throws IOException {
         Path base = FileUtil.getClassPathMainDir();
 
         Path path = base.resolve("file/test.txt");
@@ -63,18 +64,59 @@ public class FileUtilTest {
     }
 
     @Test
-    public void createDirIfNotExists() {
+    public void createDir() {
+        Path base = FileUtil.getClassPathMainDir();
+
+        Path path = base.resolve("file");
+        FileUtil.createDir(path);
+        assertThat(path).exists().isDirectory();
+        boolean res = FileUtil.createDir(path, true);
+        assertThat(path).exists().isDirectory();
+        assertThat(res).isFalse();
+        res = FileUtil.createDir(path);
+        assertThat(path).exists().isDirectory();
+        assertThat(res).isTrue();
+
+        String uuid = UUID.randomUUID().toString();
+        path = Paths.get(uuid);
+        FileUtil.createDir(path);
+        assertThat(path).exists().isDirectory();
+        res = FileUtil.createDir(path, true);
+        assertThat(path).exists().isDirectory();
+        assertThat(res).isFalse();
+        res = FileUtil.createDir(path);
+        assertThat(path).exists().isDirectory();
+        assertThat(res).isTrue();
     }
 
     @Test
     public void isAbsolute() {
+        final Path path = FileUtil.getClassPathMainDir();
+        assertThat(FileUtil.isAbsolute(path.toString())).isTrue();
+
+        assertThat(FileUtil.isAbsolute(null)).isFalse();
+        assertThat(FileUtil.isAbsolute("")).isFalse();
+        assertThat(FileUtil.isAbsolute("not_exists")).isFalse();
+        assertThat(FileUtil.isAbsolute("\\")).isFalse();
+        assertThat(FileUtil.isAbsolute(path.getFileName().toString())).isFalse();
     }
 
     @Test
     public void isUserDirRelative() {
+        final Path path = FileUtil.getClassPathMainDir();
+        assertThat(FileUtil.isUserDirRelative("build")).isTrue();
+        assertThat(FileUtil.isUserDirRelative("build/classes")).isTrue();
+
+        assertThat(FileUtil.isAbsolute(null)).isFalse();
+        assertThat(FileUtil.isAbsolute("")).isFalse();
+        assertThat(FileUtil.isAbsolute("not_exists")).isFalse();
+        assertThat(FileUtil.isAbsolute("\\")).isFalse();
+        assertThat(FileUtil.isAbsolute(path.getFileName().toString())).isFalse();
     }
 
     @Test
     public void getUserDir() {
+        final Path path = FileUtil.getUserDir();
+        assertThat(path).endsWith(Paths.get("qa-tools"));
     }
 }

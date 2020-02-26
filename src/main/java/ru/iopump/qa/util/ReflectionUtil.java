@@ -5,6 +5,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import org.joor.Reflect;
 
@@ -14,38 +15,32 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@UtilityClass
 @SuppressWarnings("unused")
 public class ReflectionUtil {
+
     @NonNull
-    public Class<?> getCollectionGenericType(@NonNull Field field) {
+    public static Collection<Class<?>> getGenericTypes(@NonNull Field field) {
         final Type genericType = field.getGenericType();
         if (!(genericType instanceof ParameterizedType)) return null;
-        return (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+        return StreamUtil.stream(((ParameterizedType) genericType).getActualTypeArguments())
+                .map(t -> (Class<?>) t)
+                .collect(Collectors.toList());
     }
 
     @NonNull
-    public <T> Collection<T> createImplementations(@NonNull Class<T> interfaceOrSuperClass, @Nullable String packageName) {
-        if (StringUtils.isBlank(packageName)) {
-            return Collections.emptyList();
-        }
-        try (final ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
-            final ClassInfoList controlClasses = scanResult.getClassesImplementing(interfaceOrSuperClass.getName());
-            final List<Class<T>> controlClassRefs = controlClasses
-                    .filter(classInfo -> !classInfo.isAbstract())
-                    .loadClasses(interfaceOrSuperClass);
-            //noinspection unchecked
-            return StreamUtil.stream(controlClassRefs)
-                    .map(aClass -> (T) Reflect.onClass(aClass).create().get())
-                    .collect(Collectors.toList());
-        }
+    public static <T> Collection<T> createImplementations(@NonNull Class<T> interfaceOrSuperClass, @Nullable String packageName) {
+        //noinspection unchecked
+        return StreamUtil.stream(findImplementations(interfaceOrSuperClass, packageName))
+                .map(aClass -> (T) Reflect.onClass(aClass).create().get())
+                .collect(Collectors.toList());
     }
 
     @NonNull
-    public <T> Collection<Class<T>> findImplementations(@NonNull Class<T> interfaceOrSuperClass, @Nullable String packageName) {
+    public static <T> Collection<Class<T>> findImplementations(@NonNull Class<T> interfaceOrSuperClass, @Nullable String packageName) {
         if (StringUtils.isBlank(packageName)) {
             return Collections.emptyList();
         }
@@ -65,7 +60,7 @@ public class ReflectionUtil {
     }
 
     @NonNull
-    public Optional<Class<?>> findOneClassBySimpleNameInJdk(@Nullable String classSimpleName) {
+    public static Optional<Class<?>> findOneClassBySimpleNameInJdk(@Nullable String classSimpleName) {
         if (StringUtils.isBlank(classSimpleName)) {
             return Optional.empty();
         }

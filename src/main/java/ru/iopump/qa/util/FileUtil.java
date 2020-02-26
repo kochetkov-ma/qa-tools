@@ -1,5 +1,6 @@
 package ru.iopump.qa.util;
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
@@ -38,6 +39,7 @@ public class FileUtil {
      * @see FilesWatchdog
      * @see #ENABLE_WATCHDOG
      */
+    @Beta // No unit tests
     public static FilesWatchdog getFilesWatchdog() {
         if (!ENABLE_WATCHDOG) return new FilesWatchdog() {
             @Override
@@ -83,13 +85,13 @@ public class FileUtil {
      *
      *
      * @param path file to create.
-     * @param checkExisting true - check if exists before creating / null or false - don't check
+     * @param ifNotExists true - check if exists before creating / null or false - don't check and remove old file.
      * @return true - File has been created / false - not
      */
     @NonNull
-    public static boolean createFile(@NonNull Path path, boolean ... checkExisting) {
+    public static boolean createFile(@NonNull Path path, boolean ... ifNotExists) {
         try {
-            if (Files.notExists(path) || !(ArrayUtils.isNotEmpty(checkExisting) && checkExisting[0])) {
+            if (Files.notExists(path) || !(ArrayUtils.isNotEmpty(ifNotExists) && ifNotExists[0])) {
                 Optional.ofNullable(path.getParent()).ifPresent(FileUtil::createDir);
                 Files.deleteIfExists(path);
                 getFilesWatchdog().add(Files.createFile(path));
@@ -105,14 +107,14 @@ public class FileUtil {
      * Create all necessary directories if not exists.
      *
      * @param path directory to create.
-     * @param checkExisting true - check if exists before creating / null or false - don't check
+     * @param ifNotExists true - check if exists before creating / null or false - don't check and remove if it was a file
      * @return true - Directory has been created / false - not
      */
     @SuppressWarnings("UnusedReturnValue")
     @NonNull
-    public static boolean createDir(@NonNull Path path, boolean ... checkExisting) {
+    public static boolean createDir(@NonNull Path path, boolean ... ifNotExists) {
         try {
-            if (Files.notExists(path) || !(ArrayUtils.isNotEmpty(checkExisting) && checkExisting[0])) {
+            if (Files.notExists(path) || !(ArrayUtils.isNotEmpty(ifNotExists) && ifNotExists[0])) {
                 if (Files.isRegularFile(path)) Files.deleteIfExists(path);
                 getFilesWatchdog().add(Files.createDirectories(path));
                 return true;
@@ -161,6 +163,7 @@ public class FileUtil {
      */
     @SuppressWarnings("unused")
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Beta // No unit tests
     public static class FilesWatchdog implements Closeable {
         private final Collection<Path> watchedPaths = new ConcurrentLinkedQueue<>();
         private final Map<Path, Throwable> errors = new HashMap<>(); // NOPMD Only one thread will use it
