@@ -76,7 +76,7 @@ Merge environment and system variables.
         /* get */
         Optional<String> envOrSysProp = VarUtil.get("OS");
         assertThat(envOrSysProp).isNotEmpty();
-        /* getOfDefault */
-        String envOrSysPropOrDefault = VarUtil.getOfDefault("NOT_EXISTS", "DEFAULT_VALUE") // can be null
+        /* getOrDefault */
+        String envOrSysPropOrDefault = VarUtil.getOrDefault("NOT_EXISTS", "DEFAULT_VALUE") // can be null
         assertThat(VarUtil.getOfDefault("NOT_EXISTS", "DEFAULT_VALUE")).isEqualTo("DEFAULT_VALUE");
 ```

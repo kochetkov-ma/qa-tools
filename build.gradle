@@ -56,6 +56,20 @@ spotbugsMain {
     }
 }
 //endregion
+test {
+    minHeapSize = "256m"
+    maxHeapSize = "2G"
+    reports {
+        html.enabled = true
+    }
+    testLogging {
+        showCauses true
+        showStackTraces true
+        showExceptions true
+        /* events "started", "skipped", "failed" */
+        exceptionFormat "full"
+    }
+}
 idea {
     module {
         downloadJavadoc = true
@@ -117,11 +131,12 @@ task sourcesJar(type: Jar) {
 artifacts {
     archives javadocJar, sourcesJar
 }
-
 signing {
+    String signingKey = (findProperty('signing.key') as String)?.replaceAll('\\[n]', System.lineSeparator())
+    String signingPassword = findProperty('signing.password')
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign configurations.archives
 }
-
 uploadArchives {
     repositories {
         //noinspection GrUnresolvedAccess

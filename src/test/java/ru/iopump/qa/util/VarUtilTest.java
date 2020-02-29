@@ -46,7 +46,7 @@ public class VarUtilTest {
 
     @Test
     public void getOfDefault() {
-        assertThat(VarUtil.getOfDefault("NOT_EXISTS", "DEFAULT_VALUE"))
+        assertThat(VarUtil.getOrDefault("NOT_EXISTS", "DEFAULT_VALUE"))
                 .isEqualTo("DEFAULT_VALUE");
     }
 }
