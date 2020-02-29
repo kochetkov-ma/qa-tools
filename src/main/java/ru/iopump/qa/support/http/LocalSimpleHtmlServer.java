@@ -54,6 +54,13 @@ public class LocalSimpleHtmlServer implements Closeable {
     /**
      * New {@link LocalSimpleHtmlServer}.
      */
+    public static LocalSimpleHtmlServer of(int port) {
+        return of(port, null);
+    }
+
+    /**
+     * New {@link LocalSimpleHtmlServer}.
+     */
     public static LocalSimpleHtmlServer of(String path) {
         return of(DEFAULT_PORT, path);
     }
@@ -143,6 +150,14 @@ public class LocalSimpleHtmlServer implements Closeable {
                 "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
         private String html;
 
+        public TestHtmlServer withPort(int port) {
+            return of(port, path).asTestRule();
+        }
+
+        public TestHtmlServer withPath(String path) {
+            return of(port, path).asTestRule();
+        }
+
         public int getPort() {
             return port;
         }
@@ -155,8 +170,9 @@ public class LocalSimpleHtmlServer implements Closeable {
             return "http://localhost:" + port + path;
         }
 
-        public void withHtml(String html) {
+        public TestHtmlServer withHtml(String html) {
             this.html = html;
+            return this;
         }
 
         /**
