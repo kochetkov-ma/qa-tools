@@ -131,15 +131,12 @@ task sourcesJar(type: Jar) {
 artifacts {
     archives javadocJar, sourcesJar
 }
-
 signing {
-    String signingKey = (findProperty('signing.key') as String)
-            .replaceAll('\\[n]', System.lineSeparator()).replaceAll('"', '')
+    String signingKey = (findProperty('signing.key') as String)?.replaceAll('\\[n]', System.lineSeparator())
     String signingPassword = findProperty('signing.password')
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign configurations.archives
 }
-
 uploadArchives {
     repositories {
         //noinspection GrUnresolvedAccess
