@@ -37,8 +37,8 @@ jobs:
         gradle-version: current
         arguments: '-PossrhUsername=kochetkov-ma -PossrhPassword=${{ secrets.ossrhPassword }} uploadArchives'
     - name: Add release git tag
-        if: github.ref == 'refs/heads/master'
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: current
-          arguments: 'createRelease'
+      if: github.ref == 'refs/heads/master'
+      uses: eskatos/gradle-command-action@v1
+      with:
+        gradle-version: current
+        arguments: 'createRelease'
