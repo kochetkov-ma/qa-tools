@@ -59,7 +59,6 @@ spotbugsMain {
 test {
     minHeapSize = "256m"
     maxHeapSize = "2G"
-    jvmArgs '-XX:MaxPermSize=512m'
     reports {
         html.enabled = true
     }
@@ -134,7 +133,7 @@ artifacts {
 }
 
 signing {
-    String signingKey = (findProperty('signing.key') as String)?.replaceAll('\\[n]', '\n')
+    String signingKey = (findProperty('signing.key') as String)?.replaceAll('\\[n]', System.lineSeparator())
     String signingPassword = findProperty('signing.password')
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign configurations.archives
