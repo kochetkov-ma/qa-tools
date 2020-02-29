@@ -52,7 +52,7 @@ public class VarUtil {
      * @see System#getProperty(String)
      */
     @Nullable
-    public static String getOfDefault(@NonNull String propertyNameAkaKey, @Nullable String defaultValue) {
+    public static String getOrDefault(@NonNull String propertyNameAkaKey, @Nullable String defaultValue) {
         return get(propertyNameAkaKey).orElse(defaultValue);
     }
 }
