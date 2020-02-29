@@ -134,8 +134,8 @@ artifacts {
 }
 
 signing {
-    def signingKey = findProperty('signing.key')
-    def signingPassword = findProperty('signing.password')
+    String signingKey = (findProperty('signing.key') as String).replaceAll("\\[n]", System.lineSeparator())
+    String signingPassword = findProperty('signing.password')
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign configurations.archives
 }
