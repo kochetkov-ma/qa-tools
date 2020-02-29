@@ -133,7 +133,9 @@ artifacts {
 }
 
 signing {
-    String signingKey = (findProperty('signing.key') as String).replaceAll('\\[n]', System.lineSeparator())
+    String signingKey = (findProperty('signing.key') as String)
+            .replaceAll('\\[n]', System.lineSeparator()).replaceAll('"', '')
+
     println signingKey
     String signingPassword = findProperty('signing.password')
     useInMemoryPgpKeys(signingKey, signingPassword)
