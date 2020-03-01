@@ -6,6 +6,11 @@ Different simple tools for auto testing:
 - api
 - other
 
+## Getting
+```groovy
+implementation 'io.rest-assured:rest-assured:0.1.1'
+```
+
 ## Possibilities 
 #### Selenium element highlighting
 `WebDriverEventListener` to highlight element with which one be interacting now (active element).
