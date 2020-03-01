@@ -16,8 +16,7 @@ jobs:
         java-version: '11'
         java-package: jdk
         architecture: x64
-    - name: Promote - Release -
-      if: github.ref == 'refs/heads/master'
+    - name: Promote - Release
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
