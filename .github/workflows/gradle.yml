@@ -22,18 +22,18 @@ jobs:
         release.customPassword: ${{ secrets.GIT_HUB_TOKEN }}
       with:
         gradle-version: current
-        arguments: '--scan --stacktrace
+        arguments: '--stacktrace
         -PossrhUsername=kochetkov-ma
         -PossrhPassword=${{ secrets.ossrhPassword }}
         -Psigning.key="${{ secrets.GPG_SIGNING_KEY }}"
         -Psigning.password=${{ secrets.GPG_SIGNING_PASSWORD }}
-        clean check build'
+        build'
     - name: Add release git tag
-      if: github.ref == 'refs/heads/master'
+      # if: github.ref == 'refs/heads/master'
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
-        arguments: '-PossrhUsername=kochetkov-ma
+        arguments: '--info --stacktrace -PossrhUsername=kochetkov-ma
         -PossrhPassword=${{ secrets.ossrhPassword }}
         -Prelease.customUsername=kochetkov-ma
         -Prelease.customPassword=${{ secrets.GIT_HUB_TOKEN }}
@@ -43,13 +43,13 @@ jobs:
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
-        arguments: '-Psigning.key="${{ secrets.GPG_SIGNING_KEY }}"
+        arguments: '--info --stacktrace -Psigning.key="${{ secrets.GPG_SIGNING_KEY }}"
         -Psigning.password=${{ secrets.GPG_SIGNING_PASSWORD }}
         -PossrhUsername=kochetkov-ma
         -PossrhPassword=${{ secrets.ossrhPassword }}
         uploadArchives'
     - name: Create release description
-      if: github.ref == 'refs/heads/master'
+      # if: github.ref == 'refs/heads/master'
       uses: release-drafter/release-drafter@v5
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
