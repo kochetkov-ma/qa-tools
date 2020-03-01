@@ -45,4 +45,4 @@ jobs:
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
-        arguments: 'createRelease'
+        arguments: '-PossrhUsername=kochetkov-ma -PossrhPassword=${{ secrets.ossrhPassword }} createRelease'
