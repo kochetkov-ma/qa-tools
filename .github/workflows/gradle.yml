@@ -27,9 +27,9 @@ jobs:
         -PossrhPassword=${{ secrets.ossrhPassword }}
         -Psigning.key="${{ secrets.GPG_SIGNING_KEY }}"
         -Psigning.password=${{ secrets.GPG_SIGNING_PASSWORD }}
-        build'
+        check build'
     - name: Add release git tag
-      # if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master'
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
@@ -49,7 +49,7 @@ jobs:
         -PossrhPassword=${{ secrets.ossrhPassword }}
         uploadArchives'
     - name: Create release description
-      # if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master'
       uses: release-drafter/release-drafter@v5
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
