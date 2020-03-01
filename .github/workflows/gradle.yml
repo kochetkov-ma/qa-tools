@@ -45,4 +45,9 @@ jobs:
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
-        arguments: '-PossrhUsername=kochetkov-ma -PossrhPassword=${{ secrets.ossrhPassword }} createRelease'
+        arguments: '-PossrhUsername=kochetkov-ma -PossrhPassword=${{ secrets.ossrhPassword }} release'
+    - name: Create release description
+      if: github.ref == 'refs/heads/master'
+      uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
