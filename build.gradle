@@ -1,20 +1,21 @@
 buildscript {
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:4.+'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
     }
 }
 plugins {
     id 'java'
     id 'com.github.spotbugs' version '3.0.0'
-    id 'info.solidsoft.pitest' version '1.4.6'
+    id 'info.solidsoft.pitest' version '1.4.7'
     id 'jacoco'
     id 'idea'
-    id 'io.freefair.lombok' version '4.1.6'
+    id 'io.freefair.lombok' version '5.0.0-rc4'
     id 'signing'
     id 'maven'
     id 'pmd'
     id 'io.codearte.nexus-staging' version '0.21.2'
     id 'pl.allegro.tech.build.axion-release' version '1.11.0'
+    id 'com.github.ben-manes.versions' version '0.28.0'
 }
 scmVersion {
     useHighestVersion = true
@@ -80,7 +81,7 @@ idea {
 }
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = '6.2'
+    gradleVersion = ' 6.2.1'
 }
 repositories {
     mavenCentral()
@@ -88,14 +89,14 @@ repositories {
 ext {
     junit4 = '4.13'
     selenium = '3.141.59'
-    mockito = '3.2.4'
+    mockito = '3.3.0'
     assertj = '3.15.0'
     containers = '1.12.5'
     slf4j = '1.7.30'
     logback = '1.2.3'
     commonsLang = '3.9'
-    classgraph = '4.8.+'
-    joor = '0.9.+'
+    classgraph = '4.8.65'
+    joor = '0.9.12'
 }
 dependencies {
     /* Reflection lib */
