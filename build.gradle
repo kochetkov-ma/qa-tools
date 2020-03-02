@@ -81,7 +81,7 @@ idea {
 }
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = ' 6.2.1'
+    gradleVersion = '6.2.1'
 }
 repositories {
     mavenCentral()
