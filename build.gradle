@@ -5,14 +5,16 @@ buildscript {
 }
 plugins {
     id 'java'
-    id 'com.github.spotbugs' version '3.0.0'
-    id 'info.solidsoft.pitest' version '1.4.7'
     id 'jacoco'
     id 'idea'
-    id 'io.freefair.lombok' version '5.0.0-rc4'
     id 'signing'
     id 'maven'
     id 'pmd'
+    id 'checkstyle'
+
+    id 'com.github.spotbugs' version '3.0.0'
+    id 'info.solidsoft.pitest' version '1.4.7'
+    id 'io.freefair.lombok' version '5.0.0-rc4'
     id 'io.codearte.nexus-staging' version '0.21.2'
     id 'pl.allegro.tech.build.axion-release' version '1.11.0'
     id 'com.github.ben-manes.versions' version '0.28.0'
@@ -31,7 +33,7 @@ archivesBaseName = theArchivesBaseName
 //region PMD
 pmd {
     rulePriority = 4 // 5 is default
-    ruleSetFiles "$rootDir/gradle/pmd-rules.xml"
+    ruleSetFiles "$rootDir/config/pmd/pmd-rules.xml"
     ruleSets = []
 }
 pmdTest {
@@ -44,7 +46,7 @@ spotbugs {
     ignoreFailures false
     effort 'default'
     reportLevel 'high'
-    excludeFilter file("$rootDir/gradle/spotbugs-exclude.xml")
+    excludeFilter file("$rootDir/config/spotbug/spotbugs-exclude.xml")
 }
 spotbugsTest {
     reports {

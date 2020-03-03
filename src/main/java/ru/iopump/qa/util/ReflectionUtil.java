@@ -37,8 +37,8 @@ public class ReflectionUtil {
         final Type genericType = field.getGenericType();
         if (!(genericType instanceof ParameterizedType)) return null;
         return StreamUtil.stream(((ParameterizedType) genericType).getActualTypeArguments())
-                .map(t -> (Class<?>) t)
-                .collect(Collectors.toList());
+            .map(t -> (Class<?>) t)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -55,8 +55,8 @@ public class ReflectionUtil {
                                                           @Nullable String packageName) {
         //noinspection unchecked
         return StreamUtil.stream(findImplementations(interfaceOrSuperClass, packageName))
-                .map(aClass -> (T) Reflect.onClass(aClass).create().get())
-                .collect(Collectors.toList());
+            .map(aClass -> (T) Reflect.onClass(aClass).create().get())
+            .collect(Collectors.toList());
     }
 
     /**
@@ -72,7 +72,7 @@ public class ReflectionUtil {
     public static <T> Collection<Class<T>> findImplementations(@Nullable Class<T> interfaceOrSuperClass,
                                                                @Nullable String packageName) {
         if (StringUtils.isBlank(packageName) || interfaceOrSuperClass == null) return Collections.emptyList();
-        try (final ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
+        try (ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
             final ClassInfoList implControlClasses;
             if (interfaceOrSuperClass.isInterface()) {
                 implControlClasses = scanResult.getClassesImplementing(interfaceOrSuperClass.getName());
@@ -82,8 +82,8 @@ public class ReflectionUtil {
             final ClassInfoList controlClasses = scanResult.getSubclasses(interfaceOrSuperClass.getName());
             controlClasses.addAll(implControlClasses);
             return controlClasses
-                    .filter(classInfo -> !classInfo.isAbstract())
-                    .loadClasses(interfaceOrSuperClass);
+                .filter(classInfo -> !classInfo.isAbstract())
+                .loadClasses(interfaceOrSuperClass);
         }
     }
 
@@ -101,18 +101,18 @@ public class ReflectionUtil {
         if (StringUtils.isBlank(classSimpleName)) {
             return Optional.empty();
         }
-        try (final ScanResult scanResult = new ClassGraph()
-                .addClassLoader(ClassLoader.getSystemClassLoader())
-                .enableSystemJarsAndModules()
-                .whitelistPackages("java.lang", "java.util")
-                .scan()) {
+        try (ScanResult scanResult = new ClassGraph()
+            .addClassLoader(ClassLoader.getSystemClassLoader())
+            .enableSystemJarsAndModules()
+            .whitelistPackages("java.lang", "java.util")
+            .scan()) {
             final ClassInfoList controlClasses = scanResult.getAllClasses();
             return controlClasses
-                    .filter(classInfo -> classSimpleName.equalsIgnoreCase(classInfo.getSimpleName()))
-                    .directOnly()
-                    .stream()
-                    .findFirst()
-                    .map(ClassInfo::loadClass);
+                .filter(classInfo -> classSimpleName.equalsIgnoreCase(classInfo.getSimpleName()))
+                .directOnly()
+                .stream()
+                .findFirst()
+                .map(ClassInfo::loadClass);
         }
     }
 }

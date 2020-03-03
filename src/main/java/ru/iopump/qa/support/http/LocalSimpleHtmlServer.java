@@ -1,7 +1,13 @@
 package ru.iopump.qa.support.http;
 
 import com.sun.net.httpserver.HttpServer;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.Synchronized;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -110,18 +116,18 @@ public class LocalSimpleHtmlServer implements Closeable {
         }
         server.createContext(path, httpExchange -> {
             log.debug("[SIMPLE HTTP SERVER] Get an request '{} from {}'",
-                    httpExchange.getRequestMethod(),
-                    httpExchange.getRequestURI());
+                httpExchange.getRequestMethod(),
+                httpExchange.getRequestURI());
 
             byte[] response = html.getBytes(charset);
             httpExchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
             httpExchange.sendResponseHeaders(200, response.length);
-            try (final OutputStream out = httpExchange.getResponseBody()) {
+            try (OutputStream out = httpExchange.getResponseBody()) {
                 out.write(response);
             }
             log.debug("[SIMPLE HTTP SERVER] Response has been prepared '{} from {}'",
-                    httpExchange.getResponseHeaders(),
-                    httpExchange.getResponseCode());
+                httpExchange.getResponseHeaders(),
+                httpExchange.getResponseCode());
 
         });
         log.info("[SIMPLE HTTP SERVER] Handler created on http://localhost:{}{}", port, path);
@@ -135,10 +141,10 @@ public class LocalSimpleHtmlServer implements Closeable {
     @Override
     public void close() {
         Optional.ofNullable(server)
-                .ifPresent(s -> {
-                    s.stop(1);
-                    log.info("[SIMPLE HTTP SERVER] Closed {}", toString());
-                });
+            .ifPresent(s -> {
+                s.stop(1);
+                log.info("[SIMPLE HTTP SERVER] Closed {}", toString());
+            });
     }
 
     @AllArgsConstructor
@@ -146,8 +152,8 @@ public class LocalSimpleHtmlServer implements Closeable {
     @Getter
     public final class TestHtmlServer implements TestRule {
         static final String HTML = "<!DOCTYPE html> <html> <body> " +
-                "<h2>Simple HTML</h2> <p>Simple buttons</p> " +
-                "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
+            "<h2>Simple HTML</h2> <p>Simple buttons</p> " +
+            "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
         private String html;
 
         public TestHtmlServer withPort(int port) {
