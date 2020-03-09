@@ -1,10 +1,10 @@
 package ru.iopump.qa;
 
+import static ru.iopump.qa.TestConstants.PITEST_ENV_BOOT;
+
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import ru.iopump.qa.util.VarUtil;
-
-import static ru.iopump.qa.TestConstants.PITEST_ENV_BOOT;
 
 /**
  * Internal testing utilities.
@@ -19,7 +19,7 @@ public class TestUtil {
      */
     public static boolean isPiTest() {
         return VarUtil.get(PITEST_ENV_BOOT)
-                .map(value -> StringUtils.containsIgnoreCase(value, "org.pitest.coverage.execute.CoverageMinion"))
-                .orElse(false);
+            .map(value -> StringUtils.containsIgnoreCase(value, "org.pitest.coverage.execute.CoverageMinion"))
+            .orElse(false);
     }
 }

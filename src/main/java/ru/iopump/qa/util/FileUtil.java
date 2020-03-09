@@ -3,14 +3,6 @@ package ru.iopump.qa.util;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
-import org.apache.commons.lang3.ArrayUtils;
-import ru.iopump.qa.exception.QaUtilException;
-
-import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -18,8 +10,19 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.annotation.Nullable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.ArrayUtils;
+import ru.iopump.qa.exception.QaUtilException;
 
 @SuppressWarnings("ALL")
 @UtilityClass
@@ -41,20 +44,23 @@ public class FileUtil {
      */
     @Beta // No unit tests
     public static FilesWatchdog getFilesWatchdog() {
-        if (!ENABLE_WATCHDOG) return new FilesWatchdog() {
-            @Override
-            public void close() {}
+        if (!ENABLE_WATCHDOG) {
+            return new FilesWatchdog() {
+                @Override
+                public void close() {
+                }
 
-            @Override
-            public Map<Path, Throwable> getError() {
-                return Collections.emptyMap();
-            }
+                @Override
+                public Map<Path, Throwable> getError() {
+                    return Collections.emptyMap();
+                }
 
-            @Override
-            public Collection<Path> getAll() {
-                return Collections.emptyList();
-            }
-        };
+                @Override
+                public Collection<Path> getAll() {
+                    return Collections.emptyList();
+                }
+            };
+        }
         synchronized (FileUtil.class) {
             if (filesWatchdog == null || filesWatchdog.closed) {
                 filesWatchdog = new FilesWatchdog();
@@ -83,13 +89,12 @@ public class FileUtil {
     /**
      * Create all necessary directories and file.
      *
-     *
-     * @param path file to create.
+     * @param path        file to create.
      * @param ifNotExists true - check if exists before creating / null or false - don't check and remove old file.
      * @return true - File has been created / false - not
      */
     @NonNull
-    public static boolean createFile(@NonNull Path path, boolean ... ifNotExists) {
+    public static boolean createFile(@NonNull Path path, boolean... ifNotExists) {
         try {
             if (Files.notExists(path) || !(ArrayUtils.isNotEmpty(ifNotExists) && ifNotExists[0])) {
                 Optional.ofNullable(path.getParent()).ifPresent(FileUtil::createDir);
@@ -106,16 +111,18 @@ public class FileUtil {
     /**
      * Create all necessary directories if not exists.
      *
-     * @param path directory to create.
+     * @param path        directory to create.
      * @param ifNotExists true - check if exists before creating / null or false - don't check and remove if it was a file
      * @return true - Directory has been created / false - not
      */
     @SuppressWarnings("UnusedReturnValue")
     @NonNull
-    public static boolean createDir(@NonNull Path path, boolean ... ifNotExists) {
+    public static boolean createDir(@NonNull Path path, boolean... ifNotExists) {
         try {
             if (Files.notExists(path) || !(ArrayUtils.isNotEmpty(ifNotExists) && ifNotExists[0])) {
-                if (Files.isRegularFile(path)) Files.deleteIfExists(path);
+                if (Files.isRegularFile(path)) {
+                    Files.deleteIfExists(path);
+                }
                 getFilesWatchdog().add(Files.createDirectories(path));
                 return true;
             }
@@ -176,7 +183,9 @@ public class FileUtil {
          */
         @Override
         public void close() {
-            if (closed) return;
+            if (closed) {
+                return;
+            }
             synchronized (FileUtil.class) {
                 watchedPaths.parallelStream().forEach(path -> {
                     try {

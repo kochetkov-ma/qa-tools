@@ -1,6 +1,14 @@
 package ru.iopump.qa.util;
 
 import com.google.common.collect.Iterables;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.ArrayUtils;
@@ -8,11 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.helpers.MessageFormatter;
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @UtilityClass
@@ -56,9 +59,26 @@ public class Str {
      * @see MessageFormatter#arrayFormat(String, Object[])
      */
     @NonNull
+    public static String frm(@Nullable String slf4jMessagePattern, Object... args) {
+        return format(slf4jMessagePattern, args);
+    }
+
+    /**
+     * Null safe formatter like in slf4j.
+     *
+     * @param slf4jMessagePattern Slf4j pattern with '{}'
+     * @param args                Values
+     * @return Formatted string
+     * @see MessageFormatter#arrayFormat(String, Object[])
+     */
+    @NonNull
     public static String format(@Nullable String slf4jMessagePattern, Object... args) {
-        if (slf4jMessagePattern == null) return nullStr();
-        if (ArrayUtils.isEmpty(args)) return slf4jMessagePattern;
+        if (slf4jMessagePattern == null) {
+            return nullStr();
+        }
+        if (ArrayUtils.isEmpty(args)) {
+            return slf4jMessagePattern;
+        }
         return MessageFormatter.arrayFormat(slf4jMessagePattern, args).getMessage();
     }
 
@@ -80,40 +100,79 @@ public class Str {
         return toString(object);
     }
 
+    /**
+     * Array to pretty string.
+     *
+     * @param array array to pretty printing
+     * @return pretty string
+     */
     public static String toPrettyString(@Nullable Object... array) {
-        if (array == null) return "";
+        if (array == null) {
+            return "";
+        }
         return toPrettyString(Arrays.asList(array));
     }
 
+    /**
+     * Map to pretty string.
+     *
+     * @param map Map
+     * @return Pretty string
+     */
     @NonNull
     public static String toPrettyString(@Nullable Map<?, ?> map) {
-        if (map == null) return "";
+        if (map == null) {
+            return "";
+        }
         final Map<String, String> printableMap = map.keySet().stream().collect(Collectors.toMap(Str::toStr, Str::toStr));
         final int maxKeyLengthTmp = printableMap.keySet().stream().map(String::length).max(Comparator.naturalOrder()).orElse(10);
         final int maxKeyLengthFinal = Math.min(maxKeyLengthTmp, MAP_FORMAT_MAX_ALIGN);
-        return "Size: " + map.size() +
-                StreamUtil.stream(map).map(e -> String.format("%" + maxKeyLengthFinal + "s : %s", e.getKey(), e.getValue()))
-                        .collect(Collectors.joining(System.lineSeparator(), System.lineSeparator(), ""));
+        return "Size: "
+            + map.size()
+            + StreamUtil.stream(map).map(e -> String.format("%" + maxKeyLengthFinal + "s : %s", e.getKey(), e.getValue()))
+            .collect(Collectors.joining(System.lineSeparator(), System.lineSeparator(), ""));
     }
 
+    /**
+     * {@link Iterable} object to pretty string.
+     *
+     * @param objects Iterable
+     * @return Prety string.
+     */
     public static String toPrettyString(@Nullable Iterable<?> objects) {
-        if (objects == null) return "";
+        if (objects == null) {
+            return "";
+        }
         return "Size: " + Iterables.size(objects) + StreamUtil.stream(objects).map(Str::toStr)
-                .collect(Collectors.joining(System.lineSeparator(), System.lineSeparator(), ""));
+            .collect(Collectors.joining(System.lineSeparator(), System.lineSeparator(), ""));
     }
 
+    /**
+     * Universal safe toString method instead of {@link Object#toString()}.
+     *
+     * @param object Any object.
+     * @return String representation.
+     */
     @NonNull
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked", "checkstyle:ParenPad"})
     public static String toString(@Nullable Object object) {
-        if (object == null) return nullStr();
-        if (object instanceof String) return (String) object;
+        if (object == null) {
+            return nullStr();
+        }
+        if (object instanceof String) {
+            return (String) object;
+        }
         try {
-            if (object.getClass().getMethod("toString").getDeclaringClass() != Object.class) return object.toString();
-        } catch (NoSuchMethodException ignored) { /* nothing */}
-        if (object instanceof Collection)
+            if (object.getClass().getMethod("toString").getDeclaringClass() != Object.class) {
+                return object.toString();
+            }
+        } catch (NoSuchMethodException ignored) { /* nothing */ }
+        if (object instanceof Collection) {
             return Arrays.toString(StreamUtil.stream((Collection) object).map(Str::toString).toArray());
-        if (object instanceof Object[])
+        }
+        if (object instanceof Object[]) {
             return Arrays.toString(StreamUtil.stream((Object[]) object).map(Str::toString).toArray());
+        }
         return ReflectionToStringBuilder.toString(object, QaSimpleToStringStyle.INSTANCE);
     }
 

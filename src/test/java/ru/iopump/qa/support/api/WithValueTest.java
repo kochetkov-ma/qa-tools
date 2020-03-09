@@ -1,14 +1,16 @@
 package ru.iopump.qa.support.api;
 
-import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.Test;
 
+
+@SuppressWarnings("unchecked")
 public class WithValueTest {
 
     @Test
     public void hasValue() {
+        //noinspection rawtypes
         WithValue withValue = () -> "string";
         assertThat(withValue.hasValue("StRiNg")).isTrue();
         assertThat(withValue.hasValue("StRiN")).isFalse();

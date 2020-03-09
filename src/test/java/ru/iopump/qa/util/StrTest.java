@@ -1,23 +1,26 @@
 package ru.iopump.qa.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static ru.iopump.qa.TestUtil.isPiTest;
+import static ru.iopump.qa.util.Str.NULL_STR_DEFAULT;
+import static ru.iopump.qa.util.Str.format;
+import static ru.iopump.qa.util.Str.ifNotBlank;
+import static ru.iopump.qa.util.Str.nullStr;
+import static ru.iopump.qa.util.Str.setNullStrDefault;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.ToString;
-import org.junit.Test;
-import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
-import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.ToString;
+import org.junit.Test;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static ru.iopump.qa.TestUtil.isPiTest;
-import static ru.iopump.qa.util.Str.*;
-
-@SuppressWarnings({"RedundantArrayCreation", "rawtypes"})
+@SuppressWarnings( {"RedundantArrayCreation", "rawtypes"})
 public class StrTest {
 
     @Test
@@ -36,9 +39,9 @@ public class StrTest {
         assertThat(format("{}{}{}", 1)).isEqualTo("1{}{}");
         assertThat(format("{}", 1, 2)).isEqualTo("1");
         assertThat(format("not null '{}' null '{}'", 1, null))
-                .isEqualTo("not null '1' null 'null'");
+            .isEqualTo("not null '1' null 'null'");
         assertThat(format("date is '{}'", LocalDate.of(1, 1, 1)))
-                .isEqualTo("date is '" + LocalDate.of(1, 1, 1) + "'");
+            .isEqualTo("date is '" + LocalDate.of(1, 1, 1) + "'");
     }
 
     @Test
@@ -57,7 +60,12 @@ public class StrTest {
     @Test
     public void testToString() {
         Object obj;
-        if (!isPiTest()) assertThat(Str.toStr(null)).isEqualTo("null");
+        if (!isPiTest()) {
+            assertThat(Str.toStr(null)).isEqualTo("null");
+        }
+
+        obj = null;
+        assertThat(Str.toStr(obj)).isEqualTo("null");
 
         obj = "";
         assertThat(Str.toStr(obj)).isEqualTo("");
@@ -65,7 +73,7 @@ public class StrTest {
         obj = new Object();
         assertThat(Str.toStr(obj)).isEqualTo("Object()");
 
-        obj = new Integer[]{1, 2, 3, 4, 5};
+        obj = new Integer[] {1, 2, 3, 4, 5};
         assertThat(Str.toStr(obj)).isEqualTo("[1, 2, 3, 4, 5]");
 
         obj = ImmutableMap.of(1, 2, 3, 4);
@@ -76,10 +84,10 @@ public class StrTest {
 
         obj = new Item1();
         assertThat(Str.toStr(obj))
-                .isEqualTo("StrTest.Item1(" +
-                        "collection1=[StrTest.Item2(collection2=[StrTest.Item3(integers3=[1, 2]), StrTest.Item3(integers3=[1, 2])]), " +
-                        "StrTest.Item2(collection2=[StrTest.Item3(integers3=[1, 2]), StrTest.Item3(integers3=[1, 2])])], " +
-                        "name1=testing)");
+            .isEqualTo("StrTest.Item1(" +
+                "collection1=[StrTest.Item2(collection2=[StrTest.Item3(integers3=[1, 2]), StrTest.Item3(integers3=[1, 2])]), " +
+                "StrTest.Item2(collection2=[StrTest.Item3(integers3=[1, 2]), StrTest.Item3(integers3=[1, 2])])], " +
+                "name1=testing)");
 
         obj = new Item4();
         assertThat(Str.toStr(obj)).isEqualTo("StrTest.Item4(name4=test,integers3={1,2})");
@@ -88,7 +96,7 @@ public class StrTest {
     @Test
     public void testToPrettyStringCollectionAndArray() {
         final UUID uuid = UUID.randomUUID();
-        final List list = Lists.newArrayList("VALUE" , new Object(), 1000, null, uuid);
+        final List list = Lists.newArrayList("VALUE", new Object(), 1000, null, uuid);
         String result = Str.toPrettyString(list);
         if (isPiTest()) {
             assertThat(result).contains("VALUE", "Object", "1000", Str.toStr(uuid));
@@ -116,11 +124,11 @@ public class StrTest {
         map.put("KEY_LONG", "VALUE_LONG_VALUE_LONG_VALUE_LONG_VALUE_LONG");
         final String result = Str.toPrettyString(map);
         assertThat(result).contains("null : null",
-                "KEY : VALUE",
-                uuid + " : java.lang.Object",
-                "1 : 1000",
-                "KEY_LONG_KEY_LONG_KEY_LONG_KEY_LONG : null",
-                "KEY_LONG : VALUE_LONG_VALUE_LONG_VALUE_LONG_VALUE_LONG");
+            "KEY : VALUE",
+            uuid + " : java.lang.Object",
+            "1 : 1000",
+            "KEY_LONG_KEY_LONG_KEY_LONG_KEY_LONG : null",
+            "KEY_LONG : VALUE_LONG_VALUE_LONG_VALUE_LONG_VALUE_LONG");
     }
 
     private String iHash(Object obj) {
@@ -140,11 +148,11 @@ public class StrTest {
 
     @ToString
     private final static class Item3 {
-        private Integer[] integers3 = new Integer[]{1, 2};
+        private Integer[] integers3 = new Integer[] {1, 2};
     }
 
     private final static class Item4 {
         private String name4 = "test";
-        private Integer[] integers3 = new Integer[]{1, 2};
+        private Integer[] integers3 = new Integer[] {1, 2};
     }
 }

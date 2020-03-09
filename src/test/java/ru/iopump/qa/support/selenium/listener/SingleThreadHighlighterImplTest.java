@@ -1,5 +1,8 @@
 package ru.iopump.qa.support.selenium.listener;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,9 +11,6 @@ import org.mockito.internal.util.reflection.FieldSetter;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("ConstantConditions")
 public class SingleThreadHighlighterImplTest {
@@ -40,10 +40,10 @@ public class SingleThreadHighlighterImplTest {
     public void testException() throws NoSuchFieldException {
         final String prevElementField = "prevElement";
         assertThatThrownBy(() -> hHighlighter.highlight(element1, badDriver))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
         FieldSetter.setField(hHighlighter, hHighlighter.getClass().getDeclaredField(prevElementField), element1);
         assertThatThrownBy(() -> hHighlighter.unhighlightPrev(element2, badDriver))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

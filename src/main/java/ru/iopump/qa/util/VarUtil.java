@@ -1,13 +1,12 @@
 package ru.iopump.qa.util;
 
 import com.google.common.collect.ImmutableMap;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
-
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
 /**
  * System and Environment variables utility class.
@@ -27,10 +26,10 @@ public class VarUtil {
      */
     public static Map<String, String> getAll() {
         return ImmutableMap.<String, String>builder()
-                .putAll(System.getenv())
-                .putAll(System.getProperties().entrySet().stream()
-                        .collect(Collectors.toMap(e->Str.toStr(e.getKey()), e->Str.toStr(e.getValue()))))
-                .build();
+            .putAll(System.getenv())
+            .putAll(System.getProperties().entrySet().stream()
+                .collect(Collectors.toMap(e -> Str.toStr(e.getKey()), e -> Str.toStr(e.getValue()))))
+            .build();
     }
 
     /**

@@ -1,18 +1,17 @@
 package ru.iopump.qa.util;
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static ru.iopump.qa.TestUtil.isPiTest;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static ru.iopump.qa.TestUtil.isPiTest;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 @Slf4j
 public class FileUtilTest {

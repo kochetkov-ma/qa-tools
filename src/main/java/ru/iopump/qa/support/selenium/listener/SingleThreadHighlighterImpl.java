@@ -1,14 +1,15 @@
 package ru.iopump.qa.support.selenium.listener;
 
+import static ru.iopump.qa.support.selenium.listener.HUtil.PROP;
+import static ru.iopump.qa.support.selenium.listener.HUtil.exec;
+import static ru.iopump.qa.support.selenium.listener.HUtil.jsBorder;
+
+import java.util.Locale;
+import java.util.Objects;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.commons.lang3.ObjectUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
-import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Locale;
-import java.util.Objects;
-
-import static ru.iopump.qa.support.selenium.listener.HUtil.*;
 
 /**
  * Single thread and single {@link WebDriver} implementation.
@@ -19,12 +20,18 @@ public class SingleThreadHighlighterImpl implements Highlighter {
     private final String borderStyle;
     private WebElement prevElement;
 
+    /**
+     * Constructor.
+     */
     public SingleThreadHighlighterImpl(int px, String color) {
         Objects.requireNonNull(color, "Color cannot be null");
 
         borderStyle = px + "px solid " + color.toLowerCase(Locale.getDefault());
     }
 
+    /**
+     * Constructor.
+     */
     public SingleThreadHighlighterImpl() {
         this(3, "red");
     }
@@ -71,7 +78,7 @@ public class SingleThreadHighlighterImpl implements Highlighter {
 
     @Override
     public void dropState() {
-        prevElement = null;// NOPMD - null is OK
+        prevElement = null; //NOPMD - null is OK
     }
 
     @Override

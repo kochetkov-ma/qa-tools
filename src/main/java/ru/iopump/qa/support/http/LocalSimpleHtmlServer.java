@@ -1,14 +1,8 @@
 package ru.iopump.qa.support.http;
 
-import com.sun.net.httpserver.HttpServer;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import ru.iopump.qa.exception.QaException;
+import static ru.iopump.qa.support.http.LocalSimpleHtmlServer.TestHtmlServer.HTML;
 
-import javax.annotation.Nullable;
+import com.sun.net.httpserver.HttpServer;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,8 +10,19 @@ import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-
-import static ru.iopump.qa.support.http.LocalSimpleHtmlServer.TestHtmlServer.HTML;
+import javax.annotation.Nullable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.Synchronized;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+import ru.iopump.qa.exception.QaException;
 
 /**
  * JDK http server. To provide simple html page on localhost.
@@ -99,29 +104,31 @@ public class LocalSimpleHtmlServer implements Closeable {
      */
     @Synchronized
     public void publish(@NonNull String html) {
-        try {
-            this.server = HttpServer.create(new InetSocketAddress(port), 0);
-            log.info("[SIMPLE HTTP SERVER] Created");
-        } catch (IOException e) {
-            throw new QaException("Error during creating JDK http-server " + toString(), e);
+        if (server == null) {
+            try {
+                server = HttpServer.create(new InetSocketAddress(port), 0);
+                log.info("[SIMPLE HTTP SERVER] Created");
+            } catch (IOException e) {
+                throw new QaException("Error during creating JDK http-server " + toString(), e);
+            }
         }
         if (published) {
             server.removeContext(path);
         }
         server.createContext(path, httpExchange -> {
             log.debug("[SIMPLE HTTP SERVER] Get an request '{} from {}'",
-                    httpExchange.getRequestMethod(),
-                    httpExchange.getRequestURI());
+                httpExchange.getRequestMethod(),
+                httpExchange.getRequestURI());
 
             byte[] response = html.getBytes(charset);
             httpExchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
             httpExchange.sendResponseHeaders(200, response.length);
-            try (final OutputStream out = httpExchange.getResponseBody()) {
+            try (OutputStream out = httpExchange.getResponseBody()) {
                 out.write(response);
             }
             log.debug("[SIMPLE HTTP SERVER] Response has been prepared '{} from {}'",
-                    httpExchange.getResponseHeaders(),
-                    httpExchange.getResponseCode());
+                httpExchange.getResponseHeaders(),
+                httpExchange.getResponseCode());
 
         });
         log.info("[SIMPLE HTTP SERVER] Handler created on http://localhost:{}{}", port, path);
@@ -135,19 +142,20 @@ public class LocalSimpleHtmlServer implements Closeable {
     @Override
     public void close() {
         Optional.ofNullable(server)
-                .ifPresent(s -> {
-                    s.stop(1);
-                    log.info("[SIMPLE HTTP SERVER] Closed {}", toString());
-                });
+            .ifPresent(s -> {
+                s.stop(1);
+                log.info("[SIMPLE HTTP SERVER] Closed {}", toString());
+            });
     }
 
+    @SuppressWarnings("unused")
     @AllArgsConstructor
     @Setter
     @Getter
     public final class TestHtmlServer implements TestRule {
-        static final String HTML = "<!DOCTYPE html> <html> <body> " +
-                "<h2>Simple HTML</h2> <p>Simple buttons</p> " +
-                "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
+        static final String HTML = "<!DOCTYPE html> <html> <body> "
+            + "<h2>Simple HTML</h2> <p>Simple buttons</p> "
+            + "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
         private String html;
 
         public TestHtmlServer withPort(int port) {
@@ -176,7 +184,7 @@ public class LocalSimpleHtmlServer implements Closeable {
         }
 
         /**
-         * Don't use it!
+         * Don't use it!.
          */
         @Override
         @Deprecated
