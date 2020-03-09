@@ -1,7 +1,6 @@
 package ru.iopump.qa.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.iopump.qa.TestUtil.isPiTest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,11 +28,7 @@ public class FileUtilTest {
     @Test
     public void getClassPathMainDir() {
         final Path path = FileUtil.getClassPathMainDir();
-        if (isPiTest()) {
-            assertThat(path).endsWith(Paths.get("qa-tools"));
-        } else {
-            assertThat(path).endsWith(Paths.get("qa-tools/build/classes/java/test"));
-        }
+        assertThat(path).endsWith(Paths.get("qa-tools/build/classes/java/test"));
     }
 
     @Test
