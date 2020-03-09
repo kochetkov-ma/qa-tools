@@ -1,11 +1,10 @@
 package ru.iopump.qa.support.selenium.listener;
 
+import java.io.Closeable;
+import javax.annotation.Nullable;
 import lombok.NonNull;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
-import javax.annotation.Nullable;
-import java.io.Closeable;
 
 /**
  * Class for turn on/off highlighting element in active {@link WebElement}.

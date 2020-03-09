@@ -1,5 +1,10 @@
 package ru.iopump.qa.support.selenium.listener;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static ru.iopump.qa.TestConstants.DOCKER_HOST_MACHINE_HOSTNAME;
+
+import java.io.File;
+import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -11,16 +16,10 @@ import org.testcontainers.containers.BrowserWebDriverContainer;
 import ru.iopump.qa.support.http.LocalSimpleHtmlServer;
 import ru.iopump.qa.support.http.LocalSimpleHtmlServer.TestHtmlServer;
 
-import java.io.File;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static ru.iopump.qa.TestConstants.DOCKER_HOST_MACHINE_HOSTNAME;
-
 public class SingleThreadHighlighterImplIT {
     private static final String HTML = "<!DOCTYPE html> <html> <body> " +
-            "<h2>Simple HTML</h2> <p>Simple buttons</p> " +
-            "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
+        "<h2>Simple HTML</h2> <p>Simple buttons</p> " +
+        "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
 
     static {
         Testcontainers.exposeHostPorts(8080);
@@ -28,15 +27,15 @@ public class SingleThreadHighlighterImplIT {
 
     @Rule
     public final TestHtmlServer server = LocalSimpleHtmlServer.of().asTestRule()
-            .withPort(8080)
-            .withHtml(HTML);
+        .withPort(8080)
+        .withHtml(HTML);
 
     @Rule
     @SuppressWarnings("rawtypes")
     public final BrowserWebDriverContainer chrome =
-            new BrowserWebDriverContainer()
-                    .withCapabilities(new ChromeOptions())
-                    .withRecordingMode(BrowserWebDriverContainer.VncRecordingMode.SKIP, new File("./build/vnc"));
+        new BrowserWebDriverContainer()
+            .withCapabilities(new ChromeOptions())
+            .withRecordingMode(BrowserWebDriverContainer.VncRecordingMode.SKIP, new File("./build/vnc"));
 
     @Test
     public void openPageAndDemonstrateHighlighting() {

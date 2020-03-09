@@ -19,6 +19,9 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.11.0'
     id 'com.github.ben-manes.versions' version '0.28.0'
 }
+checkstyle {
+    toolVersion = '8.30'
+}
 scmVersion {
     useHighestVersion = true
     versionCreator 'versionWithBranch'
@@ -73,6 +76,27 @@ test {
         showExceptions true
         /* events "started", "skipped", "failed" */
         exceptionFormat "full"
+    }
+    jacoco {
+        enabled = true
+    }
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.enabled true
+    }
+}
+jacocoTestCoverageVerification {
+    mustRunAfter jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.7
+            }
+        }
     }
 }
 idea {

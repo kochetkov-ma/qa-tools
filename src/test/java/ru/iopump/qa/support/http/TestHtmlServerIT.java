@@ -1,14 +1,17 @@
 package ru.iopump.qa.support.http;
 
-import okhttp3.*;
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("ConstantConditions")
 public class TestHtmlServerIT {
@@ -33,7 +36,7 @@ public class TestHtmlServerIT {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 Assertions.assertThat(response.body().string())
-                        .contains(server.getHtml());
+                    .contains(server.getHtml());
                 countDownLatch.countDown();
             }
         });

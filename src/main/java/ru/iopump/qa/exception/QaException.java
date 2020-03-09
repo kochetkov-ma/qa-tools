@@ -35,8 +35,4 @@ public class QaException extends RuntimeException {
     public QaException(Throwable cause) {
         super(cause);
     }
-
-    public QaException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

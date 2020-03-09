@@ -1,8 +1,7 @@
 package ru.iopump.qa.util;
 
-import lombok.Cleanup;
-import org.junit.Test;
-import ru.iopump.qa.exception.QaUtilException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,9 +10,9 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import lombok.Cleanup;
+import org.junit.Test;
+import ru.iopump.qa.exception.QaUtilException;
 
 public class ResourceUtilTest {
 
@@ -39,7 +38,7 @@ public class ResourceUtilTest {
         assertThat(io4).isNotNull();
 
         assertThatThrownBy(() -> ResourceUtil.getResourceAsStream("not_exists"))
-                .isInstanceOf(QaUtilException.class)
-                .hasMessageContaining("Cannot find resource 'not_exists'");
+            .isInstanceOf(QaUtilException.class)
+            .hasMessageContaining("Cannot find resource 'not_exists'");
     }
 }

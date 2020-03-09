@@ -1,14 +1,13 @@
 package ru.iopump.qa.util;
 
+import static ru.iopump.qa.util.Str.format;
+import static ru.iopump.qa.util.Str.toStr;
+
+import javax.annotation.Nullable;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import ru.iopump.qa.support.api.WithValue;
-
-import javax.annotation.Nullable;
-
-import static ru.iopump.qa.util.Str.format;
-import static ru.iopump.qa.util.Str.toStr;
 
 @UtilityClass
 public class EnumUtil {
@@ -31,10 +30,12 @@ public class EnumUtil {
                                                                      @Nullable V expectedValue) {
         final T[] values = enumClass.getEnumConstants();
         return StreamUtil.stream(values)
-                .filter(i -> i.hasValue(expectedValue))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(format("There are no enum items among '{}' " +
-                        "with value = '{}'{}", toStr(values), toStr(expectedValue), expectedValue instanceof String ? " ignore case" : "")));
+            .filter(i -> i.hasValue(expectedValue))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(
+                format("There are no enum items among '{}' with value = '{}'{}",
+                    toStr(values), toStr(expectedValue), expectedValue instanceof String ? " ignore case" : ""))
+            );
     }
 
     /**
@@ -53,9 +54,11 @@ public class EnumUtil {
                                                   @Nullable String expectedEnumName) {
         final T[] values = enumClass.getEnumConstants();
         return StreamUtil.stream(values)
-                .filter(i -> StringUtils.equalsAnyIgnoreCase(i.name(), expectedEnumName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(format("There are no enum items among '{}' " +
-                        "with name = '{}' ignore case", toStr(values), expectedEnumName)));
+            .filter(i -> StringUtils.equalsAnyIgnoreCase(i.name(), expectedEnumName))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(
+                format("There are no enum items among '{}' with name = '{}' ignore case",
+                    toStr(values), expectedEnumName))
+            );
     }
 }

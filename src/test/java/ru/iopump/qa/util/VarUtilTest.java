@@ -1,14 +1,13 @@
 package ru.iopump.qa.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Map;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Map;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class VarUtilTest {
@@ -30,8 +29,8 @@ public class VarUtilTest {
         final Map<String, String> result = VarUtil.getAll();
         log.info("RESULT: {}\n", Str.toPrettyString(result));
         assertThat(result).isNotEmpty()
-                .containsEntry("OS", System.getenv("OS"))
-                .containsEntry("TEST_SYS", "TEST_OS_FROM_SYS_ENV");
+            .containsEntry("OS", System.getenv("OS"))
+            .containsEntry("TEST_SYS", "TEST_OS_FROM_SYS_ENV");
     }
 
     @Test
@@ -47,6 +46,6 @@ public class VarUtilTest {
     @Test
     public void getOfDefault() {
         assertThat(VarUtil.getOrDefault("NOT_EXISTS", "DEFAULT_VALUE"))
-                .isEqualTo("DEFAULT_VALUE");
+            .isEqualTo("DEFAULT_VALUE");
     }
 }

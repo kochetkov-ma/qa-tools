@@ -1,6 +1,16 @@
 package ru.iopump.qa.support.http;
 
+import static ru.iopump.qa.support.http.LocalSimpleHtmlServer.TestHtmlServer.HTML;
+
 import com.sun.net.httpserver.HttpServer;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,17 +23,6 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import ru.iopump.qa.exception.QaException;
-
-import javax.annotation.Nullable;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-
-import static ru.iopump.qa.support.http.LocalSimpleHtmlServer.TestHtmlServer.HTML;
 
 /**
  * JDK http server. To provide simple html page on localhost.
@@ -105,11 +104,13 @@ public class LocalSimpleHtmlServer implements Closeable {
      */
     @Synchronized
     public void publish(@NonNull String html) {
-        try {
-            this.server = HttpServer.create(new InetSocketAddress(port), 0);
-            log.info("[SIMPLE HTTP SERVER] Created");
-        } catch (IOException e) {
-            throw new QaException("Error during creating JDK http-server " + toString(), e);
+        if (server == null) {
+            try {
+                server = HttpServer.create(new InetSocketAddress(port), 0);
+                log.info("[SIMPLE HTTP SERVER] Created");
+            } catch (IOException e) {
+                throw new QaException("Error during creating JDK http-server " + toString(), e);
+            }
         }
         if (published) {
             server.removeContext(path);
@@ -147,13 +148,14 @@ public class LocalSimpleHtmlServer implements Closeable {
             });
     }
 
+    @SuppressWarnings("unused")
     @AllArgsConstructor
     @Setter
     @Getter
     public final class TestHtmlServer implements TestRule {
-        static final String HTML = "<!DOCTYPE html> <html> <body> " +
-            "<h2>Simple HTML</h2> <p>Simple buttons</p> " +
-            "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
+        static final String HTML = "<!DOCTYPE html> <html> <body> "
+            + "<h2>Simple HTML</h2> <p>Simple buttons</p> "
+            + "<div> <button>Button-1</button> <button>Button-2</button> </div> </body> </html>";
         private String html;
 
         public TestHtmlServer withPort(int port) {
@@ -182,7 +184,7 @@ public class LocalSimpleHtmlServer implements Closeable {
         }
 
         /**
-         * Don't use it!
+         * Don't use it!.
          */
         @Override
         @Deprecated

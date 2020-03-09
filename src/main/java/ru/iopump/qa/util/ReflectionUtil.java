@@ -4,12 +4,6 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
-import org.apache.commons.lang3.StringUtils;
-import org.joor.Reflect;
-
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -17,6 +11,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.StringUtils;
+import org.joor.Reflect;
 
 @UtilityClass
 @SuppressWarnings("unused")
@@ -33,9 +32,13 @@ public class ReflectionUtil {
      */
     @NonNull
     public static Collection<Class<?>> getGenericTypes(@Nullable Field field) {
-        if (field == null) return Collections.emptyList();
+        if (field == null) {
+            return Collections.emptyList();
+        }
         final Type genericType = field.getGenericType();
-        if (!(genericType instanceof ParameterizedType)) return null;
+        if (!(genericType instanceof ParameterizedType)) {
+            return null;
+        }
         return StreamUtil.stream(((ParameterizedType) genericType).getActualTypeArguments())
             .map(t -> (Class<?>) t)
             .collect(Collectors.toList());
@@ -55,7 +58,7 @@ public class ReflectionUtil {
                                                           @Nullable String packageName) {
         //noinspection unchecked
         return StreamUtil.stream(findImplementations(interfaceOrSuperClass, packageName))
-            .map(aClass -> (T) Reflect.onClass(aClass).create().get())
+            .map(implClass -> (T) Reflect.onClass(implClass).create().get())
             .collect(Collectors.toList());
     }
 
@@ -71,7 +74,9 @@ public class ReflectionUtil {
     @NonNull
     public static <T> Collection<Class<T>> findImplementations(@Nullable Class<T> interfaceOrSuperClass,
                                                                @Nullable String packageName) {
-        if (StringUtils.isBlank(packageName) || interfaceOrSuperClass == null) return Collections.emptyList();
+        if (StringUtils.isBlank(packageName) || interfaceOrSuperClass == null) {
+            return Collections.emptyList();
+        }
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
             final ClassInfoList implControlClasses;
             if (interfaceOrSuperClass.isInterface()) {
