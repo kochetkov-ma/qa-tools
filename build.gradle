@@ -84,10 +84,13 @@ test {
 }
 jacocoTestReport {
     reports {
-        xml.enabled false
+        xml.enabled true
         csv.enabled false
         html.enabled true
     }
+}
+check {
+    finalizedBy 'pitest'
 }
 jacocoTestCoverageVerification {
     mustRunAfter jacocoTestReport
@@ -144,6 +147,8 @@ dependencies {
 }
 pitest {
     verbose.set true
+    timestampedReports = false
+    outputFormats = ['XML', 'HTML']
 }
 //region Maven Central Publication
 task javadocJar(type: Jar) {

@@ -1,3 +1,12 @@
+QA Tools Java Library
+=================================
+![build](https://github.com/kochetkov-ma/qa-tools/workflows/Build%20/%20Make%20Release%20/%20Publish%20to%20OSS/badge.svg?branch=master)
+![jdk11](https://camo.githubusercontent.com/f3886a668d85acf93f6fec0beadcbb40a5446014/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a646b2d31312d7265642e737667)
+![gradle](https://camo.githubusercontent.com/f7b6b0146f2ee4c36d3da9fa18d709301d91f811/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f746f6f6c2d677261646c652d626c75652e737667)
+![junit](https://camo.githubusercontent.com/d2ba89c41121d7c6223c1ad926380235cf95ef82/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a756e69742d706c6174666f726d2d627269676874677265656e2e737667)
+
+
+
 ## qa-tools
 Different simple tools for auto testing:
 - unit-testing

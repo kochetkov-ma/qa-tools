@@ -23,12 +23,18 @@ import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 @SuppressWarnings( {"RedundantArrayCreation", "rawtypes"})
 public class StrTest {
 
+
+
     @Test
     public void testNullStr() {
-        setNullStrDefault(NULL_STR_DEFAULT);
-        assertThat(nullStr()).isEqualTo("null");
-        setNullStrDefault("");
-        assertThat(nullStr()).isEqualTo("");
+        try {
+            setNullStrDefault(NULL_STR_DEFAULT);
+            assertThat(nullStr()).isEqualTo("null");
+            setNullStrDefault("");
+            assertThat(nullStr()).isEqualTo("");
+        } finally {
+            setNullStrDefault(NULL_STR_DEFAULT);
+        }
     }
 
     @Test
