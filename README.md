@@ -1,20 +1,20 @@
 QA Tools Java Library
 =================================
-![build](https://github.com/kochetkov-ma/qa-tools/workflows/Build%20/%20Make%20Release%20/%20Publish%20to%20OSS/badge.svg?branch=master)  
+[![Build / Make Release / Publish to OSS](https://github.com/kochetkov-ma/qa-tools/workflows/Build%20/%20Make%20Release%20/%20Publish%20to%20OSS/badge.svg?branch=master)](https://github.com/kochetkov-ma/qa-tools/actions?query=workflow%3A%22Build+%2F+Make+Release+%2F+Publish+to+OSS%22)  
 
-![jdk11](https://camo.githubusercontent.com/f3886a668d85acf93f6fec0beadcbb40a5446014/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a646b2d31312d7265642e737667)
-![gradle](https://camo.githubusercontent.com/f7b6b0146f2ee4c36d3da9fa18d709301d91f811/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f746f6f6c2d677261646c652d626c75652e737667)
-![junit](https://camo.githubusercontent.com/d2ba89c41121d7c6223c1ad926380235cf95ef82/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a756e69742d706c6174666f726d2d627269676874677265656e2e737667)  
+[![jdk11](https://camo.githubusercontent.com/f3886a668d85acf93f6fec0beadcbb40a5446014/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a646b2d31312d7265642e737667)](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+[![gradle](https://camo.githubusercontent.com/f7b6b0146f2ee4c36d3da9fa18d709301d91f811/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f746f6f6c2d677261646c652d626c75652e737667)](https://gradle.org/)
+[![junit](https://camo.githubusercontent.com/d2ba89c41121d7c6223c1ad926380235cf95ef82/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a756e69742d706c6174666f726d2d627269676874677265656e2e737667)](https://github.com/junit-team/junit4/blob/master/doc/ReleaseNotes4.13.md)  
 
-![Coverage Status](https://coveralls.io/repos/github/kochetkov-ma/qa-tools/badge.svg?branch=master)  
+[![Coverage Status](https://coveralls.io/repos/github/kochetkov-ma/qa-tools/badge.svg)](https://coveralls.io/github/kochetkov-ma/qa-tools)  
 
-![Maven Central](https://maven-badges.herokuapp.com/maven-central/ru.iopump.qa/qa-tools/badge.svg)  
-
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/ru.iopump.qa/qa-tools/badge.svg)](https://maven-badges.herokuapp.com/maven-central/ru.iopump.qa/qa-tools)  
+ 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d6bb880cecb44f7db5f57c8ae54234b8)](https://app.codacy.com/manual/kochetkov-ma/qa-tools?utm_source=github.com&utm_medium=referral&utm_content=kochetkov-ma/qa-tools&utm_campaign=Badge_Grade_Dashboard)  
 
-![checkstyle](https://img.shields.io/badge/checkstyle-google-blue)
-![pmd](https://img.shields.io/badge/pmd-passed-green)
-![spotbugs](https://img.shields.io/badge/spotbugs-passed-green)
+[![checkstyle](https://img.shields.io/badge/checkstyle-google-blue)](https://github.com/checkstyle/checkstyle)
+[![pmd](https://img.shields.io/badge/pmd-passed-green)](https://github.com/pmd/pmd)
+[![spotbugs](https://img.shields.io/badge/spotbugs-passed-green)](https://github.com/spotbugs/spotbugs)
 
 ## qa-tools
 Different simple tools for auto testing:
