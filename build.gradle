@@ -59,7 +59,7 @@ spotbugsTest {
 }
 spotbugsMain {
     reports {
-        xml.enabled false
+        xml.enabled true
         html.enabled true
     }
 }
@@ -68,6 +68,7 @@ test {
     minHeapSize = "256m"
     maxHeapSize = "2G"
     reports {
+        xml = true
         html.enabled = true
     }
     testLogging {
@@ -90,7 +91,7 @@ jacocoTestReport {
     }
 }
 check {
-    finalizedBy 'pitest'
+    // finalizedBy 'pitest'
 }
 jacocoTestCoverageVerification {
     mustRunAfter jacocoTestReport
