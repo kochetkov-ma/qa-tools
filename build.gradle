@@ -18,6 +18,7 @@ plugins {
     id 'io.codearte.nexus-staging' version '0.21.2'
     id 'pl.allegro.tech.build.axion-release' version '1.11.0'
     id 'com.github.ben-manes.versions' version '0.28.0'
+    id 'com.github.kt3k.coveralls' version '2.10.1'
 }
 checkstyle {
     toolVersion = '8.30'
@@ -53,13 +54,11 @@ spotbugs {
 }
 spotbugsTest {
     reports {
-        xml.enabled false
         html.enabled true
     }
 }
 spotbugsMain {
     reports {
-        xml.enabled true
         html.enabled true
     }
 }
@@ -68,7 +67,7 @@ test {
     minHeapSize = "256m"
     maxHeapSize = "2G"
     reports {
-        xml = true
+        junitXml.enabled = true
         html.enabled = true
     }
     testLogging {
@@ -91,7 +90,7 @@ jacocoTestReport {
     }
 }
 check {
-    // finalizedBy 'pitest'
+    finalizedBy 'pitest'
 }
 jacocoTestCoverageVerification {
     mustRunAfter jacocoTestReport
@@ -157,7 +156,10 @@ task javadocJar(type: Jar) {
     from javadoc
     javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 }
-
+coveralls {
+    jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
+    pitReportPath 'build/reports/pitest/mutations.xml'
+}
 task sourcesJar(type: Jar) {
     archiveClassifier.set 'sources'
     from sourceSets.main.allSource
