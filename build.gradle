@@ -54,11 +54,13 @@ spotbugs {
 }
 spotbugsTest {
     reports {
+        xml.enabled false
         html.enabled true
     }
 }
 spotbugsMain {
     reports {
+        xml.enabled false
         html.enabled true
     }
 }
