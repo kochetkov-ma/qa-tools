@@ -1,4 +1,7 @@
 ## qa-tools
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d6bb880cecb44f7db5f57c8ae54234b8)](https://app.codacy.com/manual/kochetkov-ma/qa-tools?utm_source=github.com&utm_medium=referral&utm_content=kochetkov-ma/qa-tools&utm_campaign=Badge_Grade_Dashboard)
+
 Different simple tools for auto testing:
 - unit-testing
 - web ui
