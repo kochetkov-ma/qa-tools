@@ -26,7 +26,6 @@ jobs:
         -Prelease.pushTagsOnly
         release'
     - name: Upload to OSS sonatype
-      if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
