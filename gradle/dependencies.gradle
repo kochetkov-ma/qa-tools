@@ -1,0 +1,35 @@
+repositories {
+    mavenCentral()
+}
+ext {
+    junit4 = '4.13'
+    selenium = '3.141.59'
+    mockito = '3.3.3'
+    assertj = '3.15.0'
+    containers = '1.13.0'
+    slf4j = '1.7.30'
+    logback = '1.2.3'
+    commonsLang = '3.9'
+    classgraph = '4.8.65'
+    joor = '0.9.12'
+}
+dependencies {
+    /* Reflection lib */
+    implementation "org.jooq:joor:$joor"
+    /* Classpath scanner */
+    implementation "io.github.classgraph:classgraph:$classgraph"
+    /* Apache commons */
+    implementation "org.apache.commons:commons-lang3:$commonsLang"
+    implementation "org.seleniumhq.selenium:selenium-api:$selenium"
+    implementation "org.seleniumhq.selenium:selenium-support:$selenium"
+    implementation "org.slf4j:slf4j-api:$slf4j"
+    implementation("junit:junit:$junit4") { transitive = false }
+    /* Testing */
+    testImplementation "org.mockito:mockito-core:$mockito"
+    testImplementation "org.assertj:assertj-core:$assertj"
+    testImplementation "org.testcontainers:selenium:$containers"
+    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$selenium"
+    testImplementation "org.slf4j:slf4j-simple:$slf4j"
+    /* From plugin */
+    spotbugs 'com.github.spotbugs:spotbugs:4.0.2'
+}
