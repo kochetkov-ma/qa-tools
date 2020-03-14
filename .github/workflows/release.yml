@@ -8,6 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Print information
+      run: echo Current build = ${{ github.head_ref }}
     - name: Deep checkout
       uses: actions/checkout@v2
       with:
@@ -34,7 +36,7 @@ jobs:
         -Prelease.versionIncrementer=incrementMajor
         release'
     - name: Increment minor version
-      if: contains(github.head_ref, 'feature/')
+      if: !contains(github.head_ref, 'feature/')
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
