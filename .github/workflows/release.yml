@@ -1,4 +1,4 @@
-name: Create release tag
+name: Make Release / Publish to OSS
 
 on:
   pull_request:
@@ -8,14 +8,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout whole branch
+    - name: Deep checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
     - name: Fetch tags
       run: git fetch --tags --force
-    - name: Add release git tag
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+        java-package: jdk
+        architecture: x64
+    - name: Increment major version
       uses: eskatos/gradle-command-action@v1
+      if: contains(github.head_ref, 'feature/')
       with:
         gradle-version: current
         arguments: '--info --stacktrace -PossrhUsername=kochetkov-ma
@@ -24,6 +31,20 @@ jobs:
         -Prelease.customPassword=${{ secrets.GIT_HUB_TOKEN }}
         -Prelease.disableChecks
         -Prelease.pushTagsOnly
+        -Prelease.versionIncrementer=incrementMajor
+        release'
+    - name: Increment minor version
+      uses: eskatos/gradle-command-action@v1
+      if: !contains(github.head_ref, 'feature/')
+      with:
+        gradle-version: current
+        arguments: '--info --stacktrace -PossrhUsername=kochetkov-ma
+        -PossrhPassword=${{ secrets.ossrhPassword }}
+        -Prelease.customUsername=kochetkov-ma
+        -Prelease.customPassword=${{ secrets.GIT_HUB_TOKEN }}
+        -Prelease.disableChecks
+        -Prelease.pushTagsOnly
+        -Prelease.versionIncrementer=incrementMinor
         release'
     - name: Upload to OSS sonatype
       uses: eskatos/gradle-command-action@v1

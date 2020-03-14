@@ -1,4 +1,4 @@
-name: Build / Make Release / Publish to OSS
+name: Build / Test / Check
 
 on:
   push:
@@ -13,12 +13,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout whole branch
+    - name: Fast checkout
       uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Fetch tags
-      run: git fetch --tags --force
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
