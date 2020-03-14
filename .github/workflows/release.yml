@@ -15,7 +15,6 @@ jobs:
     - name: Fetch tags
       run: git fetch --tags --force
     - name: Add release git tag
-      if: github.ref == 'refs/heads/master'
       uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
