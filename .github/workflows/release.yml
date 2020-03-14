@@ -22,7 +22,7 @@ jobs:
         java-version: '11'
         java-package: jdk
         architecture: x64
-    - name: Increment MAJOR version
+    - name: Increment MINOR version
       if: contains(github.head_ref, 'feature/')
       uses: eskatos/gradle-command-action@v1
       with:
@@ -33,9 +33,9 @@ jobs:
         -Prelease.customPassword=${{ secrets.GIT_HUB_TOKEN }}
         -Prelease.disableChecks
         -Prelease.pushTagsOnly
-        -Prelease.versionIncrementer=incrementMajor
+        -Prelease.versionIncrementer=incrementMinor
         release'
-    - name: Increment MINOR version
+    - name: Increment PATCH version
       if: ${{ !contains(github.head_ref, 'feature/') }}
       uses: eskatos/gradle-command-action@v1
       with:
@@ -46,7 +46,7 @@ jobs:
         -Prelease.customPassword=${{ secrets.GIT_HUB_TOKEN }}
         -Prelease.disableChecks
         -Prelease.pushTagsOnly
-        -Prelease.versionIncrementer=incrementMinor
+        -Prelease.versionIncrementer=incrementPatch
         release'
     - name: Upload to OSS sonatype
       uses: eskatos/gradle-command-action@v1
