@@ -19,7 +19,7 @@ artifacts {
 signing {
     String signingKey = (findProperty('signing.key') as String)?.replaceAll('\\[n]', System.lineSeparator())
     signingKey = signingKey?.startsWith("\"") ? signingKey[1..-2] : signingKey
-    println signingKey
+
     String signingPassword = findProperty('signing.password')
     signingPassword = signingPassword?.startsWith("\"") ? signingPassword[1..-2] : signingPassword
 
