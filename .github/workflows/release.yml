@@ -21,8 +21,8 @@ jobs:
         java-package: jdk
         architecture: x64
     - name: Increment major version
-      uses: eskatos/gradle-command-action@v1
       if: contains(github.head_ref, 'feature/')
+      uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
         arguments: '--info --stacktrace -PossrhUsername=kochetkov-ma
@@ -34,8 +34,8 @@ jobs:
         -Prelease.versionIncrementer=incrementMajor
         release'
     - name: Increment minor version
-      uses: eskatos/gradle-command-action@v1
       if: !contains(github.head_ref, 'feature/')
+      uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: current
         arguments: '--info --stacktrace -PossrhUsername=kochetkov-ma
