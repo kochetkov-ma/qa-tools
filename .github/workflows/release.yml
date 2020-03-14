@@ -33,6 +33,19 @@ jobs:
         -Prelease.pushTagsOnly
         -Prelease.versionIncrementer=incrementMajor
         release'
+    - name: Increment minor version
+      if: contains(github.head_ref, 'feature/')
+      uses: eskatos/gradle-command-action@v1
+      with:
+        gradle-version: current
+        arguments: '--info --stacktrace -PossrhUsername=kochetkov-ma
+        -PossrhPassword=${{ secrets.ossrhPassword }}
+        -Prelease.customUsername=kochetkov-ma
+        -Prelease.customPassword=${{ secrets.GIT_HUB_TOKEN }}
+        -Prelease.disableChecks
+        -Prelease.pushTagsOnly
+        -Prelease.versionIncrementer=incrementMajor
+        release'
     - name: Upload to OSS sonatype
       uses: eskatos/gradle-command-action@v1
       with:
