@@ -23,8 +23,7 @@ public class StreamUtilTest {
 
     @Test
     public void testStreamNull() {
-        Object[] obj =  null;
-        assertThat(StreamUtil.stream(obj))
+        assertThat(StreamUtil.stream((Object[])null))
             .isEmpty();
 
         assertThat(StreamUtil.noNull(null))
