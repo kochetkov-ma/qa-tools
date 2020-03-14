@@ -17,7 +17,8 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 signing {
-    String signingKey = (findProperty('signing.key') as String)?.replaceAll('\\[n]', System.lineSeparator())
+    String signingKey = (findProperty('signing.key') as String)?.replaceAll('\\[n]', '\n')
+    println signingKey
     String signingPassword = findProperty('signing.password')
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign configurations.archives
