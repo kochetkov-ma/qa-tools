@@ -20,89 +20,22 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.28.0'
     id 'com.github.kt3k.coveralls' version '2.10.1'
 }
-checkstyle {
-    toolVersion = '8.30'
-}
-scmVersion {
-    useHighestVersion = true
-    versionCreator 'versionWithBranch'
-    tag {
-        prefix = 'v'
-        versionSeparator = ''
-    }
-}
+apply from: './gradle/dependencies.gradle'
+apply from: './gradle/publishing.gradle'
+apply from: './gradle/versioning.gradle'
+apply from: './gradle/checking.gradle'
+apply from: './gradle/testing.gradle'
+
 version = scmVersion.version
 group = theGroup
 archivesBaseName = theArchivesBaseName
-//region PMD
-pmd {
-    rulePriority = 4 // 5 is default
-    ruleSetFiles "$rootDir/config/pmd/pmd-rules.xml"
-    ruleSets = []
+
+compileJava {
+    options.encoding = 'UTF-8'
 }
-pmdTest {
-    rulePriority = 1
-}
-//endregion
-//region SpotBug
-spotbugs {
-    toolVersion '4.0.0'
-    ignoreFailures false
-    effort 'default'
-    reportLevel 'high'
-    excludeFilter file("$rootDir/config/spotbug/spotbugs-exclude.xml")
-}
-spotbugsTest {
-    reports {
-        xml.enabled false
-        html.enabled true
-    }
-}
-spotbugsMain {
-    reports {
-        xml.enabled false
-        html.enabled true
-    }
-}
-//endregion
-test {
-    minHeapSize = "256m"
-    maxHeapSize = "2G"
-    reports {
-        junitXml.enabled = true
-        html.enabled = true
-    }
-    testLogging {
-        showCauses true
-        showStackTraces true
-        showExceptions true
-        /* events "started", "skipped", "failed" */
-        exceptionFormat "full"
-    }
-    jacoco {
-        enabled = true
-    }
-    finalizedBy jacocoTestReport
-}
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        csv.enabled false
-        html.enabled true
-    }
-}
-check {
-    finalizedBy 'pitest'
-}
-jacocoTestCoverageVerification {
-    mustRunAfter jacocoTestReport
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.7
-            }
-        }
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 idea {
     module {
@@ -112,110 +45,5 @@ idea {
 }
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = '6.2.1'
+    gradleVersion = '6.2.2'
 }
-repositories {
-    mavenCentral()
-}
-ext {
-    junit4 = '4.13'
-    selenium = '3.141.59'
-    mockito = '3.3.0'
-    assertj = '3.15.0'
-    containers = '1.12.5'
-    slf4j = '1.7.30'
-    logback = '1.2.3'
-    commonsLang = '3.9'
-    classgraph = '4.8.65'
-    joor = '0.9.12'
-}
-dependencies {
-    /* Reflection lib */
-    implementation "org.jooq:joor:$joor"
-    /* Classpath scanner */
-    implementation "io.github.classgraph:classgraph:$classgraph"
-    /* Apache commons */
-    implementation "org.apache.commons:commons-lang3:$commonsLang"
-    implementation "org.seleniumhq.selenium:selenium-api:$selenium"
-    implementation "org.seleniumhq.selenium:selenium-support:$selenium"
-    implementation "org.slf4j:slf4j-api:$slf4j"
-    implementation("junit:junit:$junit4") { transitive = false }
-    /* Testing */
-    testImplementation "org.mockito:mockito-core:$mockito"
-    testImplementation "org.assertj:assertj-core:$assertj"
-    testImplementation "org.testcontainers:selenium:$containers"
-    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$selenium"
-    testImplementation "org.slf4j:slf4j-simple:$slf4j"
-}
-pitest {
-    verbose.set true
-    timestampedReports = false
-    outputFormats = ['XML', 'HTML']
-}
-//region Maven Central Publication
-task javadocJar(type: Jar) {
-    archiveClassifier.set 'javadoc'
-    from javadoc
-    javadoc.options.addStringOption('Xdoclint:none', '-quiet')
-}
-coveralls {
-    jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
-    pitReportPath 'build/reports/pitest/mutations.xml'
-}
-task sourcesJar(type: Jar) {
-    archiveClassifier.set 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-signing {
-    String signingKey = (findProperty('signing.key') as String)?.replaceAll('\\[n]', System.lineSeparator())
-    String signingPassword = findProperty('signing.password')
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign configurations.archives
-}
-uploadArchives {
-    repositories {
-        //noinspection GrUnresolvedAccess
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> //noinspection GrDeprecatedAPIUsage
-                signing.signPom(deployment) }
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            pom.project {
-                name = 'QA simple libs'
-                description 'Different simple tools for auto testing'
-                url 'https://github.com/kochetkov-ma/qa-tools'
-                packaging 'jar'
-                scm {
-                    connection 'https://github.com/kochetkov-ma/qa-tools.git'
-                    developerConnection 'https://github.com/kochetkov-ma/qa-tools.git'
-                    url 'https://github.com/kochetkov-ma/qa-tools'
-                }
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'kochetkov-ma'
-                        name = 'Maxim Kochetkov'
-                        email 'kochetkov-ma@yandex.ru'
-                    }
-                }
-            }
-        }
-    }
-}
-nexusStaging {
-    packageGroup = "ru.iopump"
-}
-//endregion

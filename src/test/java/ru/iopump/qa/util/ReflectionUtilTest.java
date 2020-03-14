@@ -65,7 +65,7 @@ public class ReflectionUtilTest {
     private static class TmpOther implements ITmp {
     }
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    @SuppressWarnings( {"OptionalUsedAsFieldOrParameterType", "unused"})
     private static class Tmp extends ATmp implements ITmp {
         private Set<String> set;
         private Queue<Integer> queue;
