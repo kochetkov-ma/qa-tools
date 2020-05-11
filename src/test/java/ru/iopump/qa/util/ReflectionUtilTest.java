@@ -27,7 +27,7 @@ public class ReflectionUtilTest {
     @Test
     public void createImplementations() {
         assertThat(ReflectionUtil.createImplementations(ITmp.class, "not_exists")).isEmpty();
-        assertThat(ReflectionUtil.createImplementations(ITmp.class, null)).isEmpty();
+        assertThat(ReflectionUtil.createImplementations(ITmp.class, null)).hasSize(2);
         assertThat(ReflectionUtil.createImplementations(ITmp.class, "ru.iopump.qa.util"))
             .hasSize(2)
             .hasOnlyElementsOfTypes(TmpOther.class, Tmp.class);
@@ -39,7 +39,7 @@ public class ReflectionUtilTest {
     @Test
     public void findImplementations() {
         assertThat(ReflectionUtil.findImplementations(ITmp.class, "not_exists")).isEmpty();
-        assertThat(ReflectionUtil.findImplementations(ITmp.class, null)).isEmpty();
+        assertThat(ReflectionUtil.findImplementations(ITmp.class, null)).hasSize(2);
         assertThat(ReflectionUtil.findImplementations(ITmp.class, "ru.iopump.qa.util"))
             .hasSize(2);
         assertThat(ReflectionUtil.findImplementations(ATmp.class, "ru.iopump.qa.util"))

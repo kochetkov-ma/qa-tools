@@ -101,6 +101,28 @@ public class Str {
     }
 
     /**
+     * Any object to pretty string if object is either {@link Object}[] or {@link Map} or {@link Iterable}.
+     * Or just {@link Str#toStr(Object)} if not.
+     *
+     * @param object any Object
+     * @return pretty string or simple {@link Str#toStr(Object)}
+     */
+    public static String toPrettyString(@Nullable Object object) {
+        if (object == null) {
+            return "";
+        }
+        if (object instanceof Object[]) {
+            return toPrettyString((Object[]) object);
+        } else if (object instanceof Map) {
+            return toPrettyString((Map<?, ?>) object);
+        } else if (object instanceof Iterable) {
+            return toPrettyString((Iterable<?>) object);
+        } else {
+            return "Cannot pretty: " + Str.toStr(object);
+        }
+    }
+
+    /**
      * Array to pretty string.
      *
      * @param array array to pretty printing
@@ -154,7 +176,7 @@ public class Str {
      * @return String representation.
      */
     @NonNull
-    @SuppressWarnings({"rawtypes", "unchecked", "checkstyle:ParenPad"})
+    @SuppressWarnings( {"rawtypes", "unchecked", "checkstyle:ParenPad"})
     public static String toString(@Nullable Object object) {
         if (object == null) {
             return nullStr();
