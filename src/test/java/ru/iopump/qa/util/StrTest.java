@@ -96,7 +96,10 @@ public class StrTest {
                 "name1=testing)");
 
         obj = new Item4();
-        assertThat(Str.toStr(obj)).isEqualTo("StrTest.Item4(name4=test,integers3={1,2})");
+        assertThat(Str.toStr(obj))
+            .contains("StrTest.Item4")
+            .contains("name4=test")
+            .contains("integers3={1,2}");
     }
 
     @Test
@@ -143,22 +146,22 @@ public class StrTest {
 
     @ToString
     private final static class Item1 {
-        private Collection<Item2> collection1 = ImmutableList.of(new Item2(), new Item2());
-        private String name1 = "testing";
+        private final Collection<Item2> collection1 = ImmutableList.of(new Item2(), new Item2());
+        private final String name1 = "testing";
     }
 
     @ToString
     private final static class Item2 {
-        private Collection<Item3> collection2 = ImmutableList.of(new Item3(), new Item3());
+        private final Collection<Item3> collection2 = ImmutableList.of(new Item3(), new Item3());
     }
 
     @ToString
     private final static class Item3 {
-        private Integer[] integers3 = new Integer[] {1, 2};
+        private final Integer[] integers3 = new Integer[] {1, 2};
     }
 
     private final static class Item4 {
-        private String name4 = "test";
-        private Integer[] integers3 = new Integer[] {1, 2};
+        private final String name4 = "test";
+        private final Integer[] integers3 = new Integer[] {1, 2};
     }
 }

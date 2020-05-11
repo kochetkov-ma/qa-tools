@@ -46,6 +46,12 @@ public class FileUtil {
     public static FilesWatchdog getFilesWatchdog() {
         if (!ENABLE_WATCHDOG) {
             return new FilesWatchdog() {
+
+                @Override
+                void add(Path path) {
+                    /* do nothing */
+                }
+
                 @Override
                 public void close() {
                 }
@@ -216,7 +222,7 @@ public class FileUtil {
             return Collections.unmodifiableCollection(watchedPaths);
         }
 
-        private void add(Path path) {
+        void add(Path path) {
             synchronized (FileUtil.class) {
                 Preconditions.checkState(!closed, "FilesWatchdog already closed");
                 Optional.ofNullable(path).ifPresent(watchedPaths::add);

@@ -67,17 +67,23 @@ public class ReflectionUtil {
      * Null-safe.
      *
      * @param interfaceOrSuperClass Base type
-     * @param packageName           full package name to search
+     * @param packageName           full package name to search. NULL means all packages.
      * @param <T>                   Expected type
      * @return Collection of children.
      */
     @NonNull
     public static <T> Collection<Class<T>> findImplementations(@Nullable Class<T> interfaceOrSuperClass,
                                                                @Nullable String packageName) {
-        if (StringUtils.isBlank(packageName) || interfaceOrSuperClass == null) {
+        if (interfaceOrSuperClass == null) {
             return Collections.emptyList();
         }
-        try (ScanResult scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan()) {
+        final ScanResult scanResult;
+        if (packageName != null) {
+            scanResult = new ClassGraph().enableAllInfo().whitelistPackages(packageName).scan();
+        } else {
+            scanResult = new ClassGraph().enableAllInfo().scan();
+        }
+        try (scanResult) {
             final ClassInfoList implControlClasses;
             if (interfaceOrSuperClass.isInterface()) {
                 implControlClasses = scanResult.getClassesImplementing(interfaceOrSuperClass.getName());
