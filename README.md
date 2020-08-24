@@ -26,7 +26,7 @@ Different simple tools for auto testing:
 
 ## Getting
 ```groovy
-implementation 'io.rest-assured:rest-assured:0.1.1'
+implementation 'ru.iopump.qa:qa-tools:0.2.0'
 ```
 
 ## Possibilities 
